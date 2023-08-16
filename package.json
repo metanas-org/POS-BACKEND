@@ -1,7 +1,7 @@
 {
-	"name": "multi-tenants",
+	"name": "pos-backend",
 	"version": "1.0.0",
-	"description": "",
+	"description": "ADD_HERE",
 	"main": "app.ts",
 	"scripts": {
 		"start": "npm run build:ts && fastify start -a '0.0.0.0' -l info dist/app.js",
