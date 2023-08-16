@@ -1,0 +1,25 @@
+{
+  "extends": "fastify-tsconfig",
+  "compilerOptions": {
+    "outDir": "dist",
+    "baseUrl": "src",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "@config": ["config/index"],
+      "@models": ["models/index"],
+      "@helpers": ["helpers/index"],
+      "@interactors": ["interactors/index"],
+      "@mappers": ["mappers/index"],
+      "@middlewares": ["middlewares/index"],
+      "@services": ["services/index"],
+      "@serializers": ["serializers/index"],
+      "@database": ["database/index"]
+    },
+    "sourceMap": false,
+    "types": ["dotenv"]
+  },
+  "include": ["src"],
+  "exclude": ["fastify-helmet"]
+}
