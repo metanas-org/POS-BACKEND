@@ -5,7 +5,9 @@ import v1 from "./api/v1";
 import { cpus } from "os";
 import { ConnectTenants } from "./database/helpers";
 import { Logger, handleResponse, responseType } from "./helpers";
+import { signoz } from "./tracing";
 
+signoz.start();
 process.env.UV_THREADPOOL_SIZE = String(cpus().length);
 
 // Global Context That Will Be Used to Maintains Database Connection Configurations

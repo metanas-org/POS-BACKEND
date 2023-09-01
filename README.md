@@ -77,3 +77,17 @@ For Catalouge :
 ```bash
 npm run seed
 ```
+
+# Docker Commands To Run:
+
+# To build Docker Image:
+
+```bash
+docker build -t pos-backend .
+```
+
+# Create and Run Docker Container:
+
+```bash
+docker run -p 3000:3000 -d pos-backend
+```

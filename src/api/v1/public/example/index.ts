@@ -8,6 +8,7 @@ const example: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
     try {
       Logger.info(request, "Getting User Data.....", `EXAMPLE`);
 
+      reply.send();
       return handleResponse(reply, responseType.OK, {
         data: await User.query(request.knex).limit(10),
       });

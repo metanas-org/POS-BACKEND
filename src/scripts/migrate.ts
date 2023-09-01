@@ -4,7 +4,7 @@ import { ConnectTenants } from "../database/helpers";
 import * as path from "path";
 const migrationsDir = path.join(__dirname, "../database/migrations/tenants");
 
-const tenantConnections: any = {};
+let tenantConnections: any = {};
 const args = process.argv;
 
 async function runMigrations(tenantID: string, tenant: any) {
@@ -23,6 +23,7 @@ async function rollbackMigrations(tenantID: string, tenant: any) {
     console.error("Error rolling back migrations:", error);
   } finally {
     tenant.destroy();
+    tenantConnections = null;
   }
 }
 
@@ -39,6 +40,7 @@ ConnectTenants(tenantConnections)
         await rollbackMigrations(tenantId, connection);
       }
     }
+    tenantConnections = null;
     process.exit(1);
   })
   .catch((error) => {
