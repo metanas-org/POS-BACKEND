@@ -7,7 +7,7 @@ import { Resource } from "@opentelemetry/resources";
 import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
 
 const exporterOptions: { url: string } = {
-  url: process.env.OTEL_EXPORTER_OTLP_ENDPOINT || "http://localhost:4317",
+  url: process.env.OTEL_EXPORTER_OTLP_ENDPOINT || "http://216.48.182.148:4317",
 };
 
 const traceExporter = new OTLPTraceExporter(exporterOptions);
