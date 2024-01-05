@@ -2,7 +2,7 @@
   "extends": "fastify-tsconfig",
   "compilerOptions": {
     "outDir": "dist",
-    "baseUrl": "src",
+    "baseUrl": "./src",
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -15,7 +15,9 @@
       "@middlewares": ["middlewares/index"],
       "@services": ["services/index"],
       "@serializers": ["serializers/index"],
-      "@database": ["database/index"]
+      "@database": ["database/index"],
+      "@types": ["types/index"],
+      "@utils": ["utils/index"]
     },
     "sourceMap": false,
     "types": ["dotenv"]
