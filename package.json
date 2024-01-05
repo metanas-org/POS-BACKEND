@@ -4,10 +4,11 @@
 	"description": "ADD_HERE",
 	"main": "app.ts",
 	"scripts": {
-		"start": "npm run build:ts && fastify start -a '0.0.0.0' -l info dist/app.js",
-		"build:ts": "rm -rf dist && tsc",
+		"local": "npm run build:ts && fastify start dist/app.js",
+		"start": "npm run build:ts && fastify start  -a '0.0.0.0' dist/app.js",
+		"build:ts": "rm -rf dist && tsc && tsc-alias -p tsconfig.json",
 		"watch:ts": "tsc -w",
-		"dev": "concurrently \"npm run watch:ts\" \"fastify start -w  -a '0.0.0.0' --ignore-watch=.ts$  -l info -P dist/app.js\"",
+		"dev": "nodemon",
 		"prepare": "husky install",
 		"migrate": "npx knex migrate:latest --knexfile ./src/database/knexfile.ts ",
 		"rollback": "npx  knex migrate:rollback --all --knexfile ./src/database/knexfile.ts",
@@ -56,6 +57,7 @@
 		"husky": "^8.0.3",
 		"pretty-quick": "^3.1.3",
 		"ts-node": "^10.9.1",
+		"tsc-alias": "^1.8.8",
 		"typescript": "^5.1.6"
 	}
 }
