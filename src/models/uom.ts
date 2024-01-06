@@ -36,42 +36,40 @@ class Uom extends Model {
     };
   }
 
-  static get relationMappings() {
-    return {
-      uomCategory: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: __dirname + "/uomCateogry",
-        join: {
-          from: "uoms.uom_category_id",
-          to: "uom_categories.id",
-        },
+  static relationMappings = {
+    uomCategory: {
+      relation: Model.BelongsToOneRelation,
+      modelClass: __dirname + "/uomCateogry",
+      join: {
+        from: "uoms.uom_category_id",
+        to: "uom_categories.id",
       },
-      uomType: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: __dirname + "/uomType",
-        join: {
-          from: "uoms.uom_category_type_id",
-          to: "master_uom_types.id",
-        },
+    },
+    uomType: {
+      relation: Model.BelongsToOneRelation,
+      modelClass: __dirname + "/uomType",
+      join: {
+        from: "uoms.uom_category_type_id",
+        to: "master_uom_types.id",
       },
-      organization: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: __dirname + "/organization",
-        join: {
-          from: "uoms.organization_id",
-          to: "organizations.id",
-        },
+    },
+    organization: {
+      relation: Model.BelongsToOneRelation,
+      modelClass: __dirname + "/organization",
+      join: {
+        from: "uoms.organization_id",
+        to: "organizations.id",
       },
-      client: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: __dirname + "/client",
-        join: {
-          from: "uoms.client_id",
-          to: "clients.id",
-        },
+    },
+    client: {
+      relation: Model.BelongsToOneRelation,
+      modelClass: __dirname + "/client",
+      join: {
+        from: "uoms.client_id",
+        to: "clients.id",
       },
-    };
-  }
+    },
+  };
 
   $beforeInsert() {
     this.created_at = new Date().toISOString();

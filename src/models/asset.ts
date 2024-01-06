@@ -35,26 +35,24 @@ class Asset extends Model {
     };
   }
 
-  static get relationMappings() {
-    return {
-      organization: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: __dirname + "/organization",
-        join: {
-          from: "assets.organization_id",
-          to: "organizations.id",
-        },
+  static relationMappings = {
+    organization: {
+      relation: Model.BelongsToOneRelation,
+      modelClass: __dirname + "/organization",
+      join: {
+        from: "assets.organization_id",
+        to: "organizations.id",
       },
-      client: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: __dirname + "/client",
-        join: {
-          from: "assets.client_id",
-          to: "clients.id",
-        },
+    },
+    client: {
+      relation: Model.BelongsToOneRelation,
+      modelClass: __dirname + "/client",
+      join: {
+        from: "assets.client_id",
+        to: "clients.id",
       },
-    };
-  }
+    },
+  };
 
   $beforeInsert() {
     this.created_at = new Date().toISOString();

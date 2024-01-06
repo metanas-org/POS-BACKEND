@@ -26,7 +26,6 @@ class OrganizationUserType extends Model {
     return {
       type: "object",
       required: ["name"],
-
       properties: {
         id: { type: "integer" },
         name: { type: "string", nullable: false, minLength: 1 },
@@ -53,4 +52,4 @@ class OrganizationUserType extends Model {
   }
 }
 
-module.exports = OrganizationUserType;
+export default OrganizationUserType;

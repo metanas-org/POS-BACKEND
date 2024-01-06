@@ -1,15 +1,12 @@
 import { Model } from "objection";
 
-class AdditionalInfo extends Model {
+class OrgAddOnGroup extends Model {
   static get tableName() {
-    return "additional_infos";
+    return "org_add_on_groups";
   }
 
   id!: string;
   name!: string;
-  labels!: string[];
-  is_display_on_catalog!: boolean;
-  additional_info_type_id!: number;
   organization_id!: string;
   client_id!: string;
   is_active!: boolean;
@@ -24,10 +21,7 @@ class AdditionalInfo extends Model {
       type: "object",
       properties: {
         id: { type: "string", format: "uuid" },
-        name: { type: "text" },
-        labels: { type: "array", items: { type: "string" } },
-        is_display_on_catalog: { type: "boolean" },
-        additional_info_type_id: { type: "integer" },
+        name: { type: "string" },
         organization_id: { type: "string", format: "uuid" },
         client_id: { type: "string", format: "uuid" },
         is_active: { type: "boolean" },
@@ -41,19 +35,11 @@ class AdditionalInfo extends Model {
   }
 
   static relationMappings = {
-    additionalInfoType: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: __dirname + "/master_additional_info_types",
-      join: {
-        from: "additional_infos.additional_info_type_id",
-        to: "master_additional_info_types.id",
-      },
-    },
     organization: {
       relation: Model.BelongsToOneRelation,
       modelClass: __dirname + "/organization",
       join: {
-        from: "additional_infos.organization_id",
+        from: "org_add_on_groups.organization_id",
         to: "organizations.id",
       },
     },
@@ -61,7 +47,7 @@ class AdditionalInfo extends Model {
       relation: Model.BelongsToOneRelation,
       modelClass: __dirname + "/client",
       join: {
-        from: "additional_infos.client_id",
+        from: "org_add_on_groups.client_id",
         to: "clients.id",
       },
     },
@@ -77,4 +63,4 @@ class AdditionalInfo extends Model {
   }
 }
 
-export default AdditionalInfo;
+export default OrgAddOnGroup;

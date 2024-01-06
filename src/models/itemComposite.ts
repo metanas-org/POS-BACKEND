@@ -1,15 +1,15 @@
 import { Model } from "objection";
 
-class AdditionalInfo extends Model {
+class ItemComposite extends Model {
   static get tableName() {
-    return "additional_infos";
+    return "item_composites";
   }
 
   id!: string;
-  name!: string;
-  labels!: string[];
-  is_display_on_catalog!: boolean;
-  additional_info_type_id!: number;
+  item_detail_id!: string;
+  composite_item_id!: string;
+  composite_item_qty!: number;
+  composite_item_uom_id!: string;
   organization_id!: string;
   client_id!: string;
   is_active!: boolean;
@@ -24,10 +24,10 @@ class AdditionalInfo extends Model {
       type: "object",
       properties: {
         id: { type: "string", format: "uuid" },
-        name: { type: "text" },
-        labels: { type: "array", items: { type: "string" } },
-        is_display_on_catalog: { type: "boolean" },
-        additional_info_type_id: { type: "integer" },
+        item_detail_id: { type: "string", format: "uuid" },
+        composite_item_id: { type: "string", format: "uuid" },
+        composite_item_qty: { type: "number" },
+        composite_item_uom_id: { type: "string", format: "uuid" },
         organization_id: { type: "string", format: "uuid" },
         client_id: { type: "string", format: "uuid" },
         is_active: { type: "boolean" },
@@ -41,19 +41,35 @@ class AdditionalInfo extends Model {
   }
 
   static relationMappings = {
-    additionalInfoType: {
+    itemDetail: {
       relation: Model.BelongsToOneRelation,
-      modelClass: __dirname + "/master_additional_info_types",
+      modelClass: __dirname + "/itemDetail",
       join: {
-        from: "additional_infos.additional_info_type_id",
-        to: "master_additional_info_types.id",
+        from: "item_composites.item_detail_id",
+        to: "item_details.id",
+      },
+    },
+    compositeItem: {
+      relation: Model.BelongsToOneRelation,
+      modelClass: __dirname + "/item",
+      join: {
+        from: "item_composites.composite_item_id",
+        to: "items.id",
+      },
+    },
+    compositeItemUom: {
+      relation: Model.BelongsToOneRelation,
+      modelClass: __dirname + "/uoms",
+      join: {
+        from: "item_composites.composite_item_uom_id",
+        to: "uoms.id",
       },
     },
     organization: {
       relation: Model.BelongsToOneRelation,
       modelClass: __dirname + "/organization",
       join: {
-        from: "additional_infos.organization_id",
+        from: "item_composites.organization_id",
         to: "organizations.id",
       },
     },
@@ -61,7 +77,7 @@ class AdditionalInfo extends Model {
       relation: Model.BelongsToOneRelation,
       modelClass: __dirname + "/client",
       join: {
-        from: "additional_infos.client_id",
+        from: "item_composites.client_id",
         to: "clients.id",
       },
     },
@@ -77,4 +93,4 @@ class AdditionalInfo extends Model {
   }
 }
 
-export default AdditionalInfo;
+export default ItemComposite;

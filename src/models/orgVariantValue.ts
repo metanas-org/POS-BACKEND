@@ -36,34 +36,32 @@ class OrgVariantValue extends Model {
     };
   }
 
-  static get relationMappings() {
-    return {
-      organization: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: __dirname + "/organization",
-        join: {
-          from: "org_variant_values.organization_id",
-          to: "organizations.id",
-        },
+  static relationMappings = {
+    organization: {
+      relation: Model.BelongsToOneRelation,
+      modelClass: __dirname + "/organization",
+      join: {
+        from: "org_variant_values.organization_id",
+        to: "organizations.id",
       },
-      client: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: __dirname + "/client",
-        join: {
-          from: "org_variant_values.client_id",
-          to: "clients.id",
-        },
+    },
+    client: {
+      relation: Model.BelongsToOneRelation,
+      modelClass: __dirname + "/client",
+      join: {
+        from: "org_variant_values.client_id",
+        to: "clients.id",
       },
-      variant: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: __dirname + "/orgVariant",
-        join: {
-          from: "org_variant_values.variant_id",
-          to: "org_variants.id",
-        },
+    },
+    variant: {
+      relation: Model.BelongsToOneRelation,
+      modelClass: __dirname + "/orgVariant",
+      join: {
+        from: "org_variant_values.variant_id",
+        to: "org_variants.id",
       },
-    };
-  }
+    },
+  };
 
   $beforeInsert() {
     this.created_at = new Date().toISOString();

@@ -53,4 +53,4 @@ class AdditionalInfoType extends Model {
   }
 }
 
-module.exports = AdditionalInfoType;
+export default AdditionalInfoType;

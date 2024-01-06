@@ -32,34 +32,32 @@ class Category extends Model {
     };
   }
 
-  static get relationMappings() {
-    return {
-      asset: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: __dirname + "/asset",
-        join: {
-          from: "categories.asset_id",
-          to: "assets.id",
-        },
+  static relationMappings = {
+    asset: {
+      relation: Model.BelongsToOneRelation,
+      modelClass: __dirname + "/asset",
+      join: {
+        from: "categories.asset_id",
+        to: "assets.id",
       },
-      organization: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: __dirname + "/organization",
-        join: {
-          from: "categories.organization_id",
-          to: "organizations.id",
-        },
+    },
+    organization: {
+      relation: Model.BelongsToOneRelation,
+      modelClass: __dirname + "/organization",
+      join: {
+        from: "categories.organization_id",
+        to: "organizations.id",
       },
-      client: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: __dirname + "/client",
-        join: {
-          from: "categories.client_id",
-          to: "clients.id",
-        },
+    },
+    client: {
+      relation: Model.BelongsToOneRelation,
+      modelClass: __dirname + "/client",
+      join: {
+        from: "categories.client_id",
+        to: "clients.id",
       },
-    };
-  }
+    },
+  };
 
   $beforeInsert() {
     this.created_at = new Date().toISOString();

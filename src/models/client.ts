@@ -15,7 +15,6 @@ class Client extends Model {
     return {
       type: "object",
       required: ["name"],
-
       properties: {
         id: { type: "string", format: "uuid" },
         name: { type: "string", nullable: false, minLength: 1 },
@@ -43,4 +42,4 @@ class Client extends Model {
   }
 }
 
-module.exports = Client;
+export default Client;

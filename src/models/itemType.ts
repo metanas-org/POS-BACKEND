@@ -6,7 +6,7 @@ class ItemType extends Model {
   }
 
   id!: number;
-  value!: string;
+  name!: string;
   is_active!: boolean;
   created_at!: string;
   updated_at!: string;
@@ -26,7 +26,6 @@ class ItemType extends Model {
     return {
       type: "object",
       required: ["name"],
-
       properties: {
         id: { type: "integer" },
         name: { type: "string", nullable: false, minLength: 1 },
@@ -53,4 +52,4 @@ class ItemType extends Model {
   }
 }
 
-module.exports = ItemType;
+export default ItemType;
