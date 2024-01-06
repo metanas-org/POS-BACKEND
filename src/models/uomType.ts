@@ -53,4 +53,4 @@ class UomType extends Model {
   }
 }
 
-module.exports = UomType;
+export default UomType;

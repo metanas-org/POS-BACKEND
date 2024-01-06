@@ -1,6 +1,6 @@
 import { Model } from "objection";
 
-class BusinessTypes extends Model {
+class BusinessType extends Model {
   static get tableName() {
     return "master_business_types";
   }
@@ -26,7 +26,6 @@ class BusinessTypes extends Model {
     return {
       type: "object",
       required: ["name"],
-
       properties: {
         id: { type: "integer" },
         name: { type: "string", nullable: false, minLength: 1 },
@@ -53,4 +52,4 @@ class BusinessTypes extends Model {
   }
 }
 
-module.exports = BusinessTypes;
+export default BusinessType;

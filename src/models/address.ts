@@ -48,34 +48,32 @@ class Address extends Model {
     };
   }
 
-  static get relationMappings() {
-    return {
-      country: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: __dirname + "/country",
-        join: {
-          from: "address.country_id",
-          to: "master_countries.id",
-        },
+  static relationMappings = {
+    country: {
+      relation: Model.BelongsToOneRelation,
+      modelClass: __dirname + "/country",
+      join: {
+        from: "address.country_id",
+        to: "master_countries.id",
       },
-      organization: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: __dirname + "/organization",
-        join: {
-          from: "address.organization_id",
-          to: "organizations.id",
-        },
+    },
+    organization: {
+      relation: Model.BelongsToOneRelation,
+      modelClass: __dirname + "/organization",
+      join: {
+        from: "address.organization_id",
+        to: "organizations.id",
       },
-      client: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: __dirname + "/client",
-        join: {
-          from: "address.client_id",
-          to: "clients.id",
-        },
+    },
+    client: {
+      relation: Model.BelongsToOneRelation,
+      modelClass: __dirname + "/client",
+      join: {
+        from: "address.client_id",
+        to: "clients.id",
       },
-    };
-  }
+    },
+  };
 
   $beforeInsert() {
     this.created_at = new Date().toISOString();

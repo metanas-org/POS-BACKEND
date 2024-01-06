@@ -1,15 +1,13 @@
 import { Model } from "objection";
 
-class AdditionalInfo extends Model {
+class ItemAvailability extends Model {
   static get tableName() {
-    return "additional_infos";
+    return "item_availabilities";
   }
 
   id!: string;
-  name!: string;
-  labels!: string[];
-  is_display_on_catalog!: boolean;
-  additional_info_type_id!: number;
+  item_id!: string;
+  availability_id!: number;
   organization_id!: string;
   client_id!: string;
   is_active!: boolean;
@@ -24,10 +22,8 @@ class AdditionalInfo extends Model {
       type: "object",
       properties: {
         id: { type: "string", format: "uuid" },
-        name: { type: "text" },
-        labels: { type: "array", items: { type: "string" } },
-        is_display_on_catalog: { type: "boolean" },
-        additional_info_type_id: { type: "integer" },
+        item_id: { type: "string", format: "uuid" },
+        availability_id: { type: "integer" },
         organization_id: { type: "string", format: "uuid" },
         client_id: { type: "string", format: "uuid" },
         is_active: { type: "boolean" },
@@ -41,19 +37,27 @@ class AdditionalInfo extends Model {
   }
 
   static relationMappings = {
-    additionalInfoType: {
+    item: {
       relation: Model.BelongsToOneRelation,
-      modelClass: __dirname + "/master_additional_info_types",
+      modelClass: __dirname + "/item",
       join: {
-        from: "additional_infos.additional_info_type_id",
-        to: "master_additional_info_types.id",
+        from: "item_availabilities.item_id",
+        to: "items.id",
+      },
+    },
+    availability: {
+      relation: Model.BelongsToOneRelation,
+      modelClass: __dirname + "/availability",
+      join: {
+        from: "item_availabilities.availability_id",
+        to: "availabilities.id",
       },
     },
     organization: {
       relation: Model.BelongsToOneRelation,
       modelClass: __dirname + "/organization",
       join: {
-        from: "additional_infos.organization_id",
+        from: "item_availabilities.organization_id",
         to: "organizations.id",
       },
     },
@@ -61,7 +65,7 @@ class AdditionalInfo extends Model {
       relation: Model.BelongsToOneRelation,
       modelClass: __dirname + "/client",
       join: {
-        from: "additional_infos.client_id",
+        from: "item_availabilities.client_id",
         to: "clients.id",
       },
     },
@@ -77,4 +81,4 @@ class AdditionalInfo extends Model {
   }
 }
 
-export default AdditionalInfo;
+export default ItemAvailability;

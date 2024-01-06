@@ -25,8 +25,7 @@ class BusinessSize extends Model {
   static get jsonSchema() {
     return {
       type: "object",
-      required: ["name"],
-
+      required: ["value"],
       properties: {
         id: { type: "integer" },
         value: { type: "string", nullable: false, minLength: 1 },
@@ -53,4 +52,4 @@ class BusinessSize extends Model {
   }
 }
 
-module.exports = BusinessSize;
+export default BusinessSize;

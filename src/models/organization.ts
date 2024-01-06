@@ -69,13 +69,12 @@ class Organization extends Model {
     return {
       type: "object",
       required: ["name"],
-
       properties: {
         id: { type: "string", format: "uuid" },
         name: { type: "string", nullable: false, minLength: 1 },
-        vat_number: { type: "text" },
+        vat_number: { type: "string" },
         business_type_id: { type: "integer" },
-        business_email_id: { type: "text" },
+        business_email_id: { type: "string" },
         business_size_id: { type: "integer" },
         contact_person_id: { type: "string" },
         is_loyalty_offered: { type: "boolean" },
@@ -107,4 +106,4 @@ class Organization extends Model {
   }
 }
 
-module.exports = Organization;
+export default Organization;

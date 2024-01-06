@@ -63,6 +63,8 @@ class OrganizationUserProfile extends Model {
         created_at: { type: "string", format: "uuid" },
         updated_at: { type: "string", format: "uuid" },
         is_deleted: { type: "boolean" },
+        created_by: { type: "string", format: "uuid" },
+        updated_by: { type: "string", format: "uuid" },
       },
     };
   }
@@ -112,4 +114,4 @@ class OrganizationUserProfile extends Model {
   }
 }
 
-module.exports = OrganizationUserProfile;
+export default OrganizationUserProfile;

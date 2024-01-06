@@ -2,7 +2,7 @@ import { Model } from "objection";
 
 class Country extends Model {
   static get tableName() {
-    return "country";
+    return "master_countries";
   }
 
   id!: number;
@@ -17,7 +17,7 @@ class Country extends Model {
       relation: Model.HasManyRelation,
       modelClass: __dirname + "/address",
       join: {
-        from: "country.id",
+        from: "master_countries.id",
         to: "address.country_id",
       },
     },
@@ -54,4 +54,4 @@ class Country extends Model {
   }
 }
 
-module.exports = Country;
+export default Country;

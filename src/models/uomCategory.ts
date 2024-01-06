@@ -30,28 +30,26 @@ class UomCategory extends Model {
     };
   }
 
-  static get relationMappings() {
-    return {
-      organization: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: __dirname + "/organization",
+  static relationMappings = {
+    organization: {
+      relation: Model.BelongsToOneRelation,
+      modelClass: __dirname + "/organization",
 
-        join: {
-          from: "uom_categories.organization_id",
-          to: "organizations.id",
-        },
+      join: {
+        from: "uom_categories.organization_id",
+        to: "organizations.id",
       },
-      client: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: __dirname + "/client",
+    },
+    client: {
+      relation: Model.BelongsToOneRelation,
+      modelClass: __dirname + "/client",
 
-        join: {
-          from: "uom_categories.client_id",
-          to: "clients.id",
-        },
+      join: {
+        from: "uom_categories.client_id",
+        to: "clients.id",
       },
-    };
-  }
+    },
+  };
 
   $beforeInsert() {
     this.created_at = new Date().toISOString();
