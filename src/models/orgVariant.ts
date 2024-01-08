@@ -39,14 +39,6 @@ class OrgVariant extends Model {
         to: "organizations.id",
       },
     },
-    client: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: __dirname + "/client",
-      join: {
-        from: "org_variants.client_id",
-        to: "clients.id",
-      },
-    },
   };
 
   $beforeInsert() {

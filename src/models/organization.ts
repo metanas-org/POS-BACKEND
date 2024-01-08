@@ -17,6 +17,7 @@ class Organization extends Model {
   is_loyalty_offered?: boolean;
   loyalty_banner_asset_id?: string;
   loyalty_credit_redeeming_value?: number;
+  client_id!: string;
   is_active!: boolean;
   created_at!: string;
   updated_at!: string;
@@ -81,6 +82,7 @@ class Organization extends Model {
         loyalty_credit_redeeming_value: { type: "number" }, //double
         address_id: { type: "string", format: "uuid" },
         logo_asset_id: { type: "string", format: "uuid" },
+        client_id: { type: "string" },
         is_deleted: { type: "boolean" },
         is_active: { type: "boolean" },
         created_at: {

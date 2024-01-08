@@ -27,7 +27,7 @@ class ItemAdditionalInfo extends Model {
         additional_info_id: { type: "string", format: "uuid" },
         value: { type: "array", items: { type: "string" } },
         organization_id: { type: "string", format: "uuid" },
-        client_id: { type: "string", format: "uuid" },
+        client_id: { type: "string" },
         is_active: { type: "boolean" },
         created_at: { type: "string", format: "date-time" },
         updated_at: { type: "string", format: "date-time" },
@@ -61,14 +61,6 @@ class ItemAdditionalInfo extends Model {
       join: {
         from: "item_additional_infos.organization_id",
         to: "organizations.id",
-      },
-    },
-    client: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: __dirname + "/client",
-      join: {
-        from: "item_additional_infos.client_id",
-        to: "clients.id",
       },
     },
   };

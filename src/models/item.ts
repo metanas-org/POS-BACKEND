@@ -61,7 +61,7 @@ class Item extends Model {
         is_stock_trace_by_batch: { type: "boolean" },
         is_stock_trace_by_serial: { type: "boolean" },
         organization_id: { type: "string", format: "uuid" },
-        client_id: { type: "string", format: "uuid" },
+        client_id: { type: "string" },
         is_active: { type: "boolean" },
         created_at: { type: "string", format: "date-time" },
         updated_at: { type: "string", format: "date-time" },
@@ -111,14 +111,6 @@ class Item extends Model {
       join: {
         from: "items.organization_id",
         to: "organizations.id",
-      },
-    },
-    client: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: __dirname + "/client",
-      join: {
-        from: "items.client_id",
-        to: "clients.id",
       },
     },
   };

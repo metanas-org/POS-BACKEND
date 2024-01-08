@@ -25,7 +25,7 @@ class ItemVariant extends Model {
         item_detail_id: { type: "string", format: "uuid" },
         org_variant_type_id: { type: "integer" },
         organization_id: { type: "string", format: "uuid" },
-        client_id: { type: "string", format: "uuid" },
+        client_id: { type: "string" },
         is_active: { type: "boolean" },
         created_at: { type: "string", format: "date-time" },
         updated_at: { type: "string", format: "date-time" },
@@ -59,14 +59,6 @@ class ItemVariant extends Model {
       join: {
         from: "item_variants.organization_id",
         to: "organizations.id",
-      },
-    },
-    client: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: __dirname + "/client",
-      join: {
-        from: "item_variants.client_id",
-        to: "clients.id",
       },
     },
   };

@@ -28,7 +28,7 @@ class Uom extends Model {
         uom_category_type_id: { type: "integer" },
         ratio: { type: "number" },
         organization_id: { type: "string", format: "uuid" },
-        client_id: { type: "string", format: "uuid" },
+        client_id: { type: "string" },
         is_active: { type: "boolean" },
         created_at: { type: "string", format: "date-time" },
         updated_at: { type: "string", format: "date-time" },
@@ -59,14 +59,6 @@ class Uom extends Model {
       join: {
         from: "uoms.organization_id",
         to: "organizations.id",
-      },
-    },
-    client: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: __dirname + "/client",
-      join: {
-        from: "uoms.client_id",
-        to: "clients.id",
       },
     },
   };

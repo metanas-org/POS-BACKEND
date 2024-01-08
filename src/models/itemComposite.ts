@@ -29,7 +29,7 @@ class ItemComposite extends Model {
         composite_item_qty: { type: "number" },
         composite_item_uom_id: { type: "string", format: "uuid" },
         organization_id: { type: "string", format: "uuid" },
-        client_id: { type: "string", format: "uuid" },
+        client_id: { type: "string" },
         is_active: { type: "boolean" },
         created_at: { type: "string", format: "date-time" },
         updated_at: { type: "string", format: "date-time" },
@@ -71,14 +71,6 @@ class ItemComposite extends Model {
       join: {
         from: "item_composites.organization_id",
         to: "organizations.id",
-      },
-    },
-    client: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: __dirname + "/client",
-      join: {
-        from: "item_composites.client_id",
-        to: "clients.id",
       },
     },
   };

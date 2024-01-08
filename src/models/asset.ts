@@ -24,7 +24,7 @@ class Asset extends Model {
         asset_type: { type: "text" },
         asset_url: { type: "text" },
         organization_id: { type: "string", format: "uuid" },
-        client_id: { type: "string", format: "uuid" },
+        client_id: { type: "string" },
         is_active: { type: "boolean" },
         created_at: { type: "string", format: "date-time" },
         updated_at: { type: "string", format: "date-time" },
@@ -42,14 +42,6 @@ class Asset extends Model {
       join: {
         from: "assets.organization_id",
         to: "organizations.id",
-      },
-    },
-    client: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: __dirname + "/client",
-      join: {
-        from: "assets.client_id",
-        to: "clients.id",
       },
     },
   };
