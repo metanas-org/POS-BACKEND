@@ -20,11 +20,7 @@ export const up = async (knex: Knex): Promise<void> => {
       .references("id")
       .inTable("organizations")
       .onDelete("CASCADE");
-    table
-      .uuid("client_id")
-      .references("id")
-      .inTable("clients")
-      .onDelete("CASCADE");
+    table.string("client_id");
     table.boolean("is_active").defaultTo(true).notNullable();
     table.dateTime("created_at").defaultTo(knex.fn.now());
     table.dateTime("updated_at").defaultTo(knex.fn.now());

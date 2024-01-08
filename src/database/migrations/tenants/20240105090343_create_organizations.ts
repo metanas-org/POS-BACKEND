@@ -19,6 +19,7 @@ export const up = async (knex: Knex): Promise<void> => {
     table.uuid("contact_person_id");
     table.boolean("is_loyalty_offered").defaultTo(false).notNullable();
     table.double("loyalty_credit_redeeming_value");
+    table.string("client_id");
     table.boolean("is_deleted").defaultTo(false).notNullable();
     table.boolean("is_active").defaultTo(true).notNullable();
     table.dateTime("created_at").defaultTo(knex.fn.now());

@@ -25,7 +25,7 @@ class ItemPurchaseableUom extends Model {
         item_id: { type: "string", format: "uuid" },
         uom_id: { type: "string", format: "uuid" },
         organization_id: { type: "string", format: "uuid" },
-        client_id: { type: "string", format: "uuid" },
+        client_id: { type: "string" },
         is_active: { type: "boolean" },
         created_at: { type: "string", format: "date-time" },
         updated_at: { type: "string", format: "date-time" },
@@ -59,14 +59,6 @@ class ItemPurchaseableUom extends Model {
       join: {
         from: "item_purchaseable_uoms.organization_id",
         to: "organizations.id",
-      },
-    },
-    client: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: __dirname + "/client",
-      join: {
-        from: "item_purchaseable_uoms.client_id",
-        to: "clients.id",
       },
     },
   };

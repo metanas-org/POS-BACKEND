@@ -24,7 +24,7 @@ class Brand extends Model {
         name: { type: "string" },
         asset_id: { type: "string", format: "uuid" },
         organization_id: { type: "string", format: "uuid" },
-        client_id: { type: "string", format: "uuid" },
+        client_id: { type: "string" },
         is_active: { type: "boolean" },
         created_at: { type: "string", format: "date-time" },
         updated_at: { type: "string", format: "date-time" },
@@ -47,14 +47,6 @@ class Brand extends Model {
       join: {
         from: "brands.organization_id",
         to: "organizations.id",
-      },
-    },
-    client: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: __dirname + "/client",
-      join: {
-        from: "brands.client_id",
-        to: "clients.id",
       },
     },
   };

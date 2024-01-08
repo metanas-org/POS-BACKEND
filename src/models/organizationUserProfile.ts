@@ -58,7 +58,7 @@ class OrganizationUserProfile extends Model {
         is_loyalty_applicable: { type: "boolean" },
         can_login: { type: "boolean" },
         organization_id: { type: "string", format: "uuid" },
-        client_id: { type: "string", format: "uuid" },
+        client_id: { type: "string" },
         is_active: { type: "boolean" },
         created_at: { type: "string", format: "uuid" },
         updated_at: { type: "string", format: "uuid" },
@@ -84,14 +84,6 @@ class OrganizationUserProfile extends Model {
       join: {
         from: "organization_user_profiles.organization_id",
         to: "organizations.id",
-      },
-    },
-    client: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: __dirname + "/client",
-      join: {
-        from: "organization_user_profiles.client_id",
-        to: "clients.id",
       },
     },
     profileAsset: {

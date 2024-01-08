@@ -23,7 +23,7 @@ class OrgAddOnGroup extends Model {
         id: { type: "string", format: "uuid" },
         name: { type: "string" },
         organization_id: { type: "string", format: "uuid" },
-        client_id: { type: "string", format: "uuid" },
+        client_id: { type: "string" },
         is_active: { type: "boolean" },
         created_at: { type: "string", format: "date-time" },
         updated_at: { type: "string", format: "date-time" },
@@ -41,14 +41,6 @@ class OrgAddOnGroup extends Model {
       join: {
         from: "org_add_on_groups.organization_id",
         to: "organizations.id",
-      },
-    },
-    client: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: __dirname + "/client",
-      join: {
-        from: "org_add_on_groups.client_id",
-        to: "clients.id",
       },
     },
   };

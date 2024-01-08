@@ -27,7 +27,7 @@ class Availability extends Model {
         from: { type: "string", format: "date-time" },
         to: { type: "string", format: "date-time" },
         organization_id: { type: "string", format: "uuid" },
-        client_id: { type: "string", format: "uuid" },
+        client_id: { type: "string" },
         is_active: { type: "boolean" },
         created_at: { type: "string", format: "date-time" },
         updated_at: { type: "string", format: "date-time" },
@@ -45,14 +45,6 @@ class Availability extends Model {
       join: {
         from: "availabilities.organization_id",
         to: "organizations.id",
-      },
-    },
-    client: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: __dirname + "/client",
-      join: {
-        from: "availabilities.client_id",
-        to: "clients.id",
       },
     },
   };

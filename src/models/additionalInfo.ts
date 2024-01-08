@@ -29,7 +29,7 @@ class AdditionalInfo extends Model {
         is_display_on_catalog: { type: "boolean" },
         additional_info_type_id: { type: "integer" },
         organization_id: { type: "string", format: "uuid" },
-        client_id: { type: "string", format: "uuid" },
+        client_id: { type: "string" },
         is_active: { type: "boolean" },
         created_at: { type: "string", format: "date-time" },
         updated_at: { type: "string", format: "date-time" },
@@ -55,14 +55,6 @@ class AdditionalInfo extends Model {
       join: {
         from: "additional_infos.organization_id",
         to: "organizations.id",
-      },
-    },
-    client: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: __dirname + "/client",
-      join: {
-        from: "additional_infos.client_id",
-        to: "clients.id",
       },
     },
   };
