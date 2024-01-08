@@ -69,14 +69,6 @@ class LocationPaymentSetting extends Model {
         to: "organizations.id",
       },
     },
-    client: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: __dirname + "/client",
-      join: {
-        from: "location_payment_settings.client_id",
-        to: "clients.id",
-      },
-    },
   };
 
   $beforeInsert() {

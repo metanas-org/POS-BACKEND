@@ -30,6 +30,18 @@ import OrgVariantValue from "./orgVariantValue";
 import Uom from "./uom";
 import UomCategory from "./uomCategory";
 import UomType from "./uomType";
+import Location from "./location";
+import LocationCategory from "./locationCategory";
+import LocationDevice from "./locationDevice";
+import LocationInvoiceSetting from "./locationInvoiceSetting";
+import LocationOrderSetting from "./locationOrderSetting";
+import LocationPaymentSetting from "./locationPaymentSetting";
+import LocationPaymentOverride from "./locationPaymentOverride";
+import LocationSelfServiceAsset from "./locationSelfServiceAsset";
+import LocationTable from "./locationTable";
+import LocationType from "./locationType";
+import TaxSetting from "./taxSetting";
+import UserRole from "./userRole";
 
 export {
   Tenant,
@@ -64,4 +76,16 @@ export {
   Uom,
   UomCategory,
   UomType,
+  Location,
+  LocationCategory,
+  LocationDevice,
+  LocationInvoiceSetting,
+  LocationOrderSetting,
+  LocationPaymentOverride,
+  LocationPaymentSetting,
+  LocationSelfServiceAsset,
+  LocationTable,
+  LocationType,
+  UserRole,
+  TaxSetting,
 };

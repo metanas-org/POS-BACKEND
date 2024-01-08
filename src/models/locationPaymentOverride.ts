@@ -39,7 +39,7 @@ class LocationPaymentOverride extends Model {
   static relationMappings = {
     locationPaymentSetting: {
       relation: Model.BelongsToOneRelation,
-      modelClass: __dirname + "/location_payment_settings",
+      modelClass: __dirname + "/locationPaymentSetting",
       join: {
         from: "location_payment_overrides.location_payment_setting_id",
         to: "location_payment_settings.id",
@@ -47,7 +47,7 @@ class LocationPaymentOverride extends Model {
     },
     role: {
       relation: Model.BelongsToOneRelation,
-      modelClass: __dirname + "/user_roles",
+      modelClass: __dirname + "/userRole",
       join: {
         from: "location_payment_overrides.role_id",
         to: "user_roles.id",
@@ -55,7 +55,7 @@ class LocationPaymentOverride extends Model {
     },
     organization: {
       relation: Model.BelongsToOneRelation,
-      modelClass: __dirname + "/organizations",
+      modelClass: __dirname + "/organization",
       join: {
         from: "location_payment_overrides.organization_id",
         to: "organizations.id",

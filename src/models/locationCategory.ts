@@ -61,14 +61,6 @@ class LocationCategory extends Model {
         to: "organizations.id",
       },
     },
-    client: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: __dirname + "/client",
-      join: {
-        from: "location_categories.client_id",
-        to: "clients.id",
-      },
-    },
   };
 
   $beforeInsert() {
