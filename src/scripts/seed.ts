@@ -5,7 +5,7 @@ import * as path from "path";
 import db from "../database";
 const seederDir = path.join(__dirname, "../database/seeders/tenants");
 
-const tenantConnections: any = {};
+let tenantConnections: any = {};
 
 async function runSeed(tenantID: string, tenant: any) {
   await tenant.seed.run({
@@ -49,10 +49,12 @@ ConnectTenants(tenantConnections)
         await runSeed(tenantId, connection);
       }
     }
+    tenantConnections = null;
     process.exit(1);
   })
 
   .catch((error) => {
+    tenantConnections = null;
     console.log(error);
     process.exit(1);
   });

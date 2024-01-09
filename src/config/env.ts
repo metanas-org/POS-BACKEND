@@ -9,6 +9,11 @@ const {
   DB_PORT,
   DB_DIALECT,
   NODE_ENV,
+  REGION,
+  BUCKET_NAME,
+  OBJECT_KEY,
+  ACCESS_KEY,
+  SECRET_KEY,
 }: any = process.env;
 
 export default {
@@ -19,4 +24,9 @@ export default {
   DB_PORT,
   DB_DIALECT,
   NODE_ENV,
+  REGION,
+  BUCKET_NAME,
+  OBJECT_KEY,
+  ACCESS_KEY,
+  SECRET_KEY,
 };

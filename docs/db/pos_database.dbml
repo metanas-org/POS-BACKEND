@@ -1,0 +1,1297 @@
+Project Metanas_POS {
+  database_type: 'PostgreSQL'
+  Note: '''
+    # POS Database
+    **This application streamlines the sales process, enhances inventory control, and fosters better customer relationships for businesses of all sizes.
+    The POS system provides a user-friendly interface for staff, allowing them to manage products, process transactions, and generate insightful reports. 
+    Features include real-time inventory tracking, multi-platform accessibility, sales analytics, and customer management. 
+    This project aims to deliver a seamless and reliable solution for retailers seeking to optimize their operations and deliver an exceptional customer experience.**
+  '''
+}
+
+Table master_business_type {
+  id integer [primary key]
+  name text [note: 'Value of the business type']
+  is_active boolean [note: 'Indicates if the business type is active']
+  created_at datetime [note: 'Timestamp for when the business type was created']
+  updated_at datetime [note: 'Timestamp for when the business type was last updated']
+  Note: 'Stores Business Types applicable in the application'
+}
+
+Table master_business_size {
+  id integer [primary key]
+  value text [note: 'Value of the business size']
+  is_active boolean [note: 'Indicates if the business size is active']
+  created_at datetime [note: 'Timestamp for when the business size was created']
+  updated_at datetime [note: 'Timestamp for when the business size was last updated']
+  Note: 'Stores Business Sizes applicable in the application'
+}
+
+Table clients {
+  id uuid [primary key, note: 'Unique identifier for the client']
+  name text [note: 'Name of the organization']
+  is_active boolean [note: 'Indicates if the client is active']
+  created_at datetime [note: 'Timestamp for when the client was created']
+  updated_at datetime [note: 'Timestamp for when the client was last updated']
+  Note: 'Stores client information applicable in the application'
+}
+
+Table organizations {
+  id uuid [primary key, note: 'Unique identifier for the organization']
+  name text [note: 'Name of the organization']
+  vat_number text [note: 'VAT (Value Added Tax) number for the organization']
+  business_type_id integer [ref: > master_business_type.id, note: 'Type of business, Reference to master_business_type table']
+  business_email_id text [note: 'Email address associated with the organization\'s business']
+  business_size_id integer [ref: > master_business_size.id, note: 'Size of business, Reference to master_business_size table']
+  address_id uuid [ref: > address.id, note: 'Reference to the address of the organization']
+  logo_asset_id uuid [ref: > assets.id, note: 'Reference to the logo asset of the organization']
+  contact_person_id uuid [note: 'Point of Contact (POC) profile id, with role admin']
+  is_loyalty_offered boolean [note: 'Indicates if loyalty programs are offered by the organization']
+  loyalty_banner_asset_id uuid [ref: > assets.id, note: 'Reference to the loyalty program banner asset']
+  loyalty_credit_redeeming_value double [note: 'Value for redeeming loyalty credits']
+  client_id varchar [note: 'ID of the associated client']
+  is_active boolean [note: 'Indicates if the organization is currently active']
+  created_at datetime [note: 'Timestamp for when the organization was created']
+  updated_at datetime [note: 'Timestamp for when the organization was last updated']
+  Note: 'Stores organization information applicable in the application'
+}
+
+Table user_roles {
+  id uuid [primary key]
+  name text [note: 'Role Name']
+  is_active boolean  [note: 'Indicates if the role is active']
+  created_at datetime  [note: 'Timestamp for when the role was created']
+  updated_at datetime  [note: 'Timestamp for when the role was last updated']
+  Note: 'Stores User Roles applicable in application'
+}
+
+Table master_organization_user_types {
+  id uuid [primary key, note: 'Unique identifier for the user type']
+  name text [note: 'Role Name, representing user types such as Employee, Agent, Customer etc.']
+  is_active boolean [note: 'Indicates if the user type is active']
+  created_at datetime [note: 'Timestamp for when the user type was created']
+  updated_at datetime [note: 'Timestamp for when the user type was last updated']
+  Note: 'Stores user types like Employee, Agent, Customer etc., applicable in the application'
+}
+
+Table organization_user_profiles {
+  id uuid [primary key, note: 'Unique identifier for the user profile']
+  user_id integer [note: 'User identifier associated with the profile']
+  user_type_id integer [ref: > master_organization_user_types.id, note: 'Reference to the user type in master_organization_user_types table']
+  first_name text [note: 'First name of the user']
+  last_name text [note: 'Last name of the user']
+  gender text [note: 'Gender of the user']
+  dob date [note: 'Date of birth of the user']
+  nationality text [note: 'Nationality of the user']
+  blood_group text [note: 'Blood group of the user']
+  marital_status text [note: 'Marital status of the user']
+  religion text [note: 'Religion of the user']
+  email_id text [note: 'Email address of the user']
+  mobile_no_std_code integer [note: 'STD code for the mobile number']
+  mobile_no text [note: 'Mobile number of the user']
+  address_id uuid [ref: > address.id, note: 'Reference to the address of the user']
+  profile_asset_id uuid [ref: > assets.id, note: 'Reference to the profile asset of the user']
+  is_shift_hours_trackable boolean [note: 'Indicates if shift hours are trackable for the user']
+  is_loyalty_applicable boolean [note: 'Indicates if loyalty is applicable for the user']
+  can_login boolean [note: 'Indicates if the user can log in']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean [note: 'Indicates if the user profile is active']
+  created_at datetime [note: 'Timestamp for when the user profile was created']
+  updated_at datetime [note: 'Timestamp for when the user profile was last updated']
+  Note: 'Stores user profiles applicable for client users in the application'
+}
+
+Table master_indentites_types {
+  id integer [primary key]
+  name text [note: 'Name of the identity type']
+  is_active boolean [note: 'Indicates if the identity type is active']
+  created_at datetime [note: 'Timestamp for when the identity type was created']
+  updated_at datetime [note: 'Timestamp for when the identity type was last updated']
+  Note: 'Stores each identity type applicable for an client users'
+}
+
+Table organization_user_identities {
+  id uuid [primary key]
+  organization_user_profile_id uuid [ref: > organization_user_profiles.id, note: 'Reference to the organization user profile']
+  issued_country_id integer [ref: > master_countries.id, note: 'Reference to the issued country']
+  identity_type_id integer [ref: > master_indentites_types.id, note: 'Reference to the identity type']
+  identity_number text [note: 'Number associated with the identity']
+  valid_till date [note: 'Date until the identity is valid']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean [note: 'Indicates if the identity is active']
+  created_at datetime [note: 'Timestamp for when the identity was created']
+  updated_at datetime [note: 'Timestamp for when the identity was last updated']
+  Note: 'Stores user identities applicable for client users in the application'
+}
+
+Table organization_user_roles {
+  id uuid [primary key]
+  organization_user_profile_id uuid [ref: > organization_user_profiles.id, note: 'Reference to the organization user profile']
+  role_id integer [ref: > user_roles.id, note: 'Reference to the user role']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean [note: 'Indicates if the role is active']
+  created_at datetime [note: 'Timestamp for when the role was created']
+  updated_at datetime [note: 'Timestamp for when the role was last updated']
+  Note: 'Stores user roles applicable for client users in the application'
+}
+
+Table organization_user_location_access {
+  id uuid [primary key]
+  organization_user_profile_id uuid [ref: > organization_user_profiles.id, note: 'Reference to the organization user profile']
+  location_id uuid [ref: > locations.id, note: 'Reference to the location']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean [note: 'Indicates if the location access is active']
+  created_at datetime [note: 'Timestamp for when the location access was created']
+  updated_at datetime [note: 'Timestamp for when the location access was last updated']
+  Note: 'Stores user location access applicable for client users in the application'
+}
+
+Enum commission_type {
+  per_order
+  per_shift
+}
+
+Table organization_commission_settings {
+  id uuid [primary key]
+  organization_user_profile_id uuid [ref: > organization_user_profiles.id, note: 'Reference to the organization user profile']
+  type commission_type [note: 'Type of commission, per_order or per_shift']
+  commission_value double [note: 'Value of the commission']
+  commission_from date [note: 'Date from which the commission is applicable']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean [note: 'Indicates if the commission setting is active']
+  created_at datetime [note: 'Timestamp for when the commission setting was created']
+  updated_at datetime [note: 'Timestamp for when the commission setting was last updated']
+  Note: 'Stores commission settings applicable for client users in the application'
+}
+
+Table categories {
+  id uuid [primary key]
+  name text  [note: 'Name of the category']
+  asset_id uuid [ref: > assets.id,note: 'Reference to the assets table']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean  [note: 'Indicates if the category is active']
+  created_at datetime  [note: 'Timestamp for when the category was created']
+  updated_at datetime  [note: 'Timestamp for when the category was last updated']
+  Note: 'Stores each category applicable for an item'
+}
+
+Table brands {
+  id uuid [primary key]
+  name text  [note: 'Name of the brand']
+  asset_id uuid [ref: > assets.id,note: 'Reference to the assets table']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean  [note: 'Indicates if the brand is active']
+  created_at datetime  [note: 'Timestamp for when the brand was created']
+  updated_at datetime  [note: 'Timestamp for when the brand was last updated']
+  Note: 'Stores each brand applicable for an item'
+}
+
+Table master_item_types {
+  id integer [primary key]
+  name text  [note: 'Name of the master item type']  
+  is_active boolean  [note: 'Indicates if the master item type is active']
+  created_at datetime  [note: 'Timestamp for when the master item type was created']
+  updated_at datetime  [note: 'Timestamp for when the master item type was last updated']
+  Note: 'Master Type of item, induvidual / variant'
+}
+
+Table assets {
+  id uuid [primary key]
+  asset_type text  [note: 'Type of asset']
+  asset_url text  [note: 'URL or path to the asset']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean  [note: 'Indicates if the asset is active']
+  created_at datetime  [note: 'Timestamp for when the asset was created']
+  updated_at datetime  [note: 'Timestamp for when the asset was last updated']
+  Note: 'Assets required for display'
+}
+
+Table item_assets {
+  id uuid [primary key]
+  item_detail_id uuid [ref: > item_details.id,note: 'Reference to the item details table']
+  asset_id uuid [ref: > assets.id,note: 'Reference to the assets table']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean  [note: 'Indicates if the item asset is active']
+  created_at datetime  [note: 'Timestamp for when the item asset was created']
+  updated_at datetime  [note: 'Timestamp for when the item asset was last updated']
+  Note: 'Collection of items (Details) and it\'s relavant assets'
+}
+
+Table uom_categories {
+  id uuid [primary key]
+  name text  [note: 'Name of the unit of measure (UOM) category']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean  [note: 'Indicates if the UOM category is active']
+  created_at datetime  [note: 'Timestamp for when the UOM category was created']
+  updated_at datetime  [note: 'Timestamp for when the UOM category was last updated']
+  Note: 'Unit of measurement category, for eg., Weight'
+}
+
+Table master_uom_types {
+  id integer [primary key]
+  name text  [note: 'Name of the master UOM type']  
+  is_active boolean  [note: 'Indicates if the master UOM type is active']
+  created_at datetime  [note: 'Timestamp for when the master UOM type was created']
+  updated_at datetime  [note: 'Timestamp for when the master UOM type was last updated']
+  Note: 'Master for UOM, base, greater or lower than'
+}
+
+Table uoms {
+  id uuid [primary key]
+  name text  [note: 'Name of the unit of measure (UOM)']
+  uom_category_id uuid [ref: > uom_categories.id,note: 'Reference to the UOM categories table']
+  uom_category_type_id integer [ref: > master_uom_types.id,note: 'Reference to the master UOM types table']
+  ratio double  [note: 'Ratio for converting to the base UOM']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean  [note: 'Indicates if the UOM is active']
+  created_at datetime  [note: 'Timestamp for when the UOM was created']
+  updated_at datetime  [note: 'Timestamp for when the UOM was last updated']
+  Note: 'Induvidual unit of measurement, with ratio based on type'
+}
+
+Table availabilities {
+  id integer [primary key]
+  name text  [note: 'Name of the availability']
+  from "time without timezone" [note: 'Start time of the availability']
+  to "time without timezone" [note: 'End time of the availability']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean  [note: 'Indicates if the availability is active']
+  created_at datetime  [note: 'Timestamp for when the availability was created']
+  updated_at datetime  [note: 'Timestamp for when the availability was last updated']
+  Note: 'Induvidual time of availability'
+}
+
+Table item_availabilities {
+  id uuid [primary key]
+  item_id uuid [ref: > items.id,note: 'Reference to the items table']
+  availability_id integer [ref: > availabilities.id,note: 'Reference to the availabilities table']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean  [note: 'Indicates if the item availability is active']
+  created_at datetime  [note: 'Timestamp for when the item availability was created']
+  updated_at datetime  [note: 'Timestamp for when the item availability was last updated']
+  Note: 'Collection of item and it\'s availability'
+}
+
+Table org_variants {
+  id integer [primary key]
+  name text  [note: 'Name of the variant']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean  [note: 'Indicates if the variant is active']
+  created_at datetime  [note: 'Timestamp for when the variant was created']
+  updated_at datetime  [note: 'Timestamp for when the variant was last updated']
+  Note: 'Induvidual variant that can be applied to items'
+}
+
+Table org_variant_values {
+  id integer [primary key]
+  name text  [note: 'Name of the variant type']
+  variant_id integer [ref: > org_variants.id, note: 'Reference to the org_variants table']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean  [note: 'Indicates if the variant type is active']
+  created_at datetime  [note: 'Timestamp for when the variant type was created']
+  updated_at datetime  [note: 'Timestamp for when the variant type was last updated']
+  Note: 'Collection of types of variants'
+}
+
+Table master_additional_info_types {
+  id integer [primary key]
+  name text  [note: 'Name of the master additional info type']
+  is_active boolean  [note: 'Indicates if the master additional info type is active']
+  created_at datetime  [note: 'Timestamp for when the master additional info type was created']
+  updated_at datetime  [note: 'Timestamp for when the master additional info type was last updated']
+  Note: 'Master for additional info types, eg., text / dropdown'
+}
+
+Table additional_infos {
+  id uuid [primary key]
+  name text  [note: 'Name of the additional info']
+  labels text[] [note: 'An array of strings for additional information labels']
+  additional_info_type_id integer [ref: > master_additional_info_types.id, note: 'Reference to the master additional info types table']
+  is_display_on_catalog boolean  [note: 'Indicates if the additional info is displayed on the catalog']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean  [note: 'Indicates if the additional info is active']
+  created_at datetime  [note: 'Timestamp for when the additional info was created']
+  updated_at datetime  [note: 'Timestamp for when the additional info was last updated']
+  Note: 'Collection of addional infos based on type with applicable labels'
+}
+
+Table item_additional_info {
+  id uuid [primary key]
+  item_id uuid [ref: > items.id,note: 'Reference to the items table']
+  additional_info_id uuid [ref: > additional_infos.id,note: 'Reference to the additional infos table']
+  value text[] [note: 'An array of strings for additional information values']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean  [note: 'Indicates if the item additional info is active']
+  created_at datetime  [note: 'Timestamp for when the item additional info was created']
+  updated_at datetime  [note: 'Timestamp for when the item additional info was last updated']
+  Note: 'Collection of items and relevant addional infos with their values'
+}
+
+Table items {
+  id uuid [primary key]
+  name text  [note: 'Name of the item']
+  description text  [note: 'Description of the item']
+  hsn_code text   [note: 'Harmonized System Nomenclature (HSN) code for the item']
+  item_category_id uuid  [ref: > categories.id,note: 'Reference to the categories table']
+  item_brand_id uuid  [ref: > brands.id,note: 'Reference to the brands table']
+  item_type_id integer [ref: > master_item_types.id,note: 'Reference to the master item types table']
+  item_preparation_time double [note: 'Preparation time in minutes']
+  mark_as_favourite boolean [note: 'Mark this item as favourite']
+  is_item_an_addon boolean [note: 'Indicates if the item is an addon']
+  can_addon_be_in_catalog boolean [note: 'Indicates if the item is an addon, can it be displayed in product catalog']
+  display_variants_in_catalog boolean [note: 'Determines if variants are shown in the catalog']
+  is_purchaseable boolean  [note: 'Indicates if the item is purchasable']
+  is_sellable boolean  [note: 'Indicates if the item is sellable']
+  is_returnable boolean  [note: 'Indicates if the item is returnable']
+  return_window_in_days integer  [note: 'Number of days within which the item can be returned']
+  is_only_exchangeable boolean   [note: 'Indicates if the item is only exchangeable']
+  is_stock_trackable boolean  [note: 'Indicates if the item\'s stock is trackable']
+  trace_stock_uom_id uuid [ref: > uoms.id,note: 'Reference to the UOMs table for stock tracking']
+  is_stock_trace_by_batch boolean  [note: 'Indicates if the item\'s stock is traceable by batch']
+  is_stock_trace_by_serial boolean   [note: 'Indicates if the item\'s stock is traceable by serial number']  
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean  [note: 'Indicates if the item is active']
+  is_deleted boolean [note: 'Indicates if the item is deleted / archived']
+  created_at datetime  [note: 'Timestamp for when the item was created']
+  updated_at datetime  [note: 'Timestamp for when the item was last updated']
+  Note: 'Collection of items'
+}
+
+Table item_logs {
+  id uuid [primary key]
+  item_id uuid [ref: > items.id,note: 'Reference to the items table']
+  from_value text
+  to_value text
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean  [note: 'Indicates if the item purchasable UOM is active']
+  created_at datetime  [note: 'Timestamp for when the item purchasable UOM was created']
+  updated_at datetime  [note: 'Timestamp for when the item purchasable UOM was last updated']
+  Note: 'Collection of item change logs in the application'
+}
+
+Table item_purchaseable_uoms {
+  id uuid [primary key]
+  item_id uuid [ref: > items.id,note: 'Reference to the items table']
+  uom_id uuid [ref: > uoms.id,note: 'Reference to the UOMs table']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean  [note: 'Indicates if the item purchasable UOM is active']
+  created_at datetime  [note: 'Timestamp for when the item purchasable UOM was created']
+  updated_at datetime  [note: 'Timestamp for when the item purchasable UOM was last updated']
+  Note: 'Collection of item and if purchasable then applicable unit of measurements'
+}
+
+Table item_details {
+  id uuid [primary key]
+  item_code text [note: 'Unique identifier for item']
+  item_id uuid [ref: > items.id,note: 'Reference to the items table']  
+  variant_name text   [note: 'Name of the variant']
+  sku_code text  [note: 'Stock Keeping Unit (SKU) code for the item']
+  barcode text  [note: 'Barcode for the item']
+  base_uom_category_id uuid [ref: > uom_categories.id,note: 'Reference to the UOM categories table for the base UOM']
+  base_quantity double   [note: 'Quantity in the base UOM']
+  base_quantity_uom uuid [ref: > uoms.id,note: 'Reference to the UOMs table for the base UOM']
+  cost_price double  [note: 'Cost price of the item']
+  selling_price double  [note: 'Selling price of the item']
+  selling_uom_id uuid [ref: > uoms.id,note: 'Reference to the UOMs table for the selling UOM']
+  vat_tax double  [note: 'Value-added tax (VAT) tax rate']
+  is_composite boolean [note: 'Indicates if the item is composite of other items(Induvidual)']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean  [note: 'Indicates if the item detail is active']
+  created_at datetime  [note: 'Timestamp for when the item detail was created']
+  updated_at datetime  [note: 'Timestamp for when the item detail was last updated']
+  Note: 'Other Details of the item, and if item type is variant then N number of details created for each variant combination'
+}
+
+Table item_variants {
+  id uuid [primary key]
+  item_detail_id uuid [ref: > item_details.id,note: 'Reference to the item details table']
+  org_variant_type_id uuid [ref: > org_variant_values.id,note: 'Reference to the org_variant_values table']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean  [note: 'Indicates if the item variant is active']
+  created_at datetime  [note: 'Timestamp for when the item variant was created']
+  updated_at datetime  [note: 'Timestamp for when the item variant was last updated']
+  Note: 'Collection of item details and it\'s applicable variant types'
+}
+
+Table item_composites {
+  id uuid [primary key]
+  item_detail_id uuid [ref: > item_details.id,note: 'Reference to the item details table']
+  composite_item_id uuid [ref: > items.id,note: 'Reference to the items table representing the composite item']
+  composite_item_qty double  [note: 'Quantity of the composite item']
+  composite_item_uom_id uuid [ref: > uoms.id, note: 'Reference to the uoms table representing the unit of measurement']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean  [note: 'Indicates if the item composite is active']
+  created_at datetime  [note: 'Timestamp for when the item composite was created']
+  updated_at datetime  [note: 'Timestamp for when the item composite was last updated']
+  Note: 'If item is composite, then composite item and it\'s applicable quantity'
+}
+
+Table org_add_on_groups {
+  id uuid [primary key]
+  name text [note: 'Name of the addon group']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean [note: 'Indicates if the add-on group is currently active']
+  created_at datetime [note: 'Timestamp for when the add-on group was created']
+  updated_at datetime [note: 'Timestamp for when the add-on group was last updated']
+  Note: 'Stores add on groups details of a client'
+}
+
+Table org_add_on_group_items {
+  id uuid [primary key]
+  group_id uuid [ref: > org_add_on_groups.id, note: 'ID of the org_add_on_groups associated with this add-on']
+  item_detail_id uuid [ref: > item_details.id,note: 'Reference to the item details table']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean [note: 'Indicates if the add-on item is currently active']
+  created_at datetime [note: 'Timestamp for when the add-on item was created']
+  updated_at datetime [note: 'Timestamp for when the add-on item was last updated']
+  Note: 'Stores items applicable for addons in a group'
+}
+
+Table item_add_ons {
+  id uuid [primary key]
+  item_id uuid [ref: > items.id]
+  group_id uuid [ref: > org_add_on_groups.id, note: 'ID of the org_add_on_groups associated with this add-on']
+  item_detail_ids uuid[] [note: 'Collection of item details serving as add-ons for the respective item']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean [note: 'Indicates if the item add-on is currently active']
+  created_at datetime [note: 'Timestamp for when the item add-on was created']
+  updated_at datetime [note: 'Timestamp for when the item add-on was last updated']
+  Note: 'If the item has addons, specifies the group and it\'s applicable items'
+}
+
+
+Table master_countries {
+  id integer [primary key]
+  name text [note: 'Name of the country']
+  iso_code text [note: 'ISO code of the country']
+  is_active boolean [note: 'Indicates if the country is active']
+  created_at datetime [note: 'Timestamp for when the country was created']
+  updated_at datetime [note: 'Timestamp for when the country was last updated']
+  Note: 'Stores information about countries applicable in the application'
+}
+
+Table master_business_entity_type {
+  id integer [primary key]
+  name text [note: 'Name of the business entity type, e.g., Vendor / Customer']
+  is_active boolean [note: 'Indicates if the business entity type is active']
+  created_at datetime [note: 'Timestamp for when the business entity type was created']
+  updated_at datetime [note: 'Timestamp for when the business entity type was last updated']
+  Note: 'Stores master business entity types such as Vendor or Customer in the application'
+}
+
+Table address {
+  id uuid [primary key]
+  building text [note: 'Building information in the address']
+  address_line_1 text [note: 'Address line 1']
+  address_line_2 text [note: 'Address line 2']
+  street text [note: 'Street information in the address']
+  pincode text [note: 'Pincode or postal code of the address']
+  state text [note: 'State information in the address']
+  map_url text [note: 'URL linking to the map location of the address']
+  latitude double [note: 'Latitude coordinates of the address']
+  longitude double [note: 'Longitude coordinates of the address']
+  coutry_id integer [ref: > master_countries.id, note: 'Reference to the country in master_countries table']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean [note: 'Indicates if the address is active']
+  created_at datetime [note: 'Timestamp for when the address was created']
+  updated_at datetime [note: 'Timestamp for when the address was last updated']
+}
+
+Table business_entities {
+  id uuid [primary key]
+  name text [note: 'Name of the business entity']
+  vat_number text [note: 'VAT (Value Added Tax) number for the business entity']
+  address_id uuid [ref: > address.id, note: 'Reference to the address of the business entity']
+  type_id integer [ref: > master_business_entity_type.id,note: 'Identifier for the type of business entity']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean [note: 'Indicates if the business entity is active']
+  created_at datetime [note: 'Timestamp for when the business entity was created']
+  updated_at datetime [note: 'Timestamp for when the business entity was last updated']
+  Note: 'Stores business entities of a client, such as Vendors and Customers, in the application'
+}
+
+Table master_location_types {
+  id integer [primary key]
+  name text [note: 'Name of the master location type, e.g., Store / Warehouse']
+  is_active boolean [note: 'Indicates if the master location type is active']
+  created_at datetime [note: 'Timestamp for when the master location type was created']
+  updated_at datetime [note: 'Timestamp for when the master location type was last updated']
+  Note: 'Stores master location types such as Store or Warehouse in the application'
+}
+
+Table locations {
+  id uuid [primary key]
+  name text [note: 'Name of the location']
+  email text [note: 'Email address associated with the location']
+  mobile_no_std_code integer [note: 'STD code for the mobile number']
+  mobile_no number [note: 'Mobile number of the location']
+  address_id uuid [ref: > address.id, note: 'Reference to the address of the location']
+  location_type_id integer [ref: > master_location_types.id, note: 'Reference to the location type in master_location_types table']
+  asset_id uuid [ref: > assets.id]
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean [note: 'Indicates if the location is active']
+  created_at datetime [note: 'Timestamp for when the location was created']
+  updated_at datetime [note: 'Timestamp for when the location was last updated']
+  Note: 'Stores locations such as Stores or Warehouses of a client in the application'
+}
+
+Table location_categories {
+  id uuid [primary key]
+  location_id uuid [ref: > locations.id, note: 'Reference to the location table']
+  category_id uuid [ref: > categories.id, note: 'Reference to the category table']
+  is_active boolean [note: 'Indicates if the location category is active']
+  created_at datetime [note: 'Timestamp for when the location category was created']
+  updated_at datetime [note: 'Timestamp for when the location category was last updated']
+  Note: 'Stores the collection of locations (details) and their applicable categories in the application'
+}
+
+Table location_payment_settings {
+  id uuid [primary key]
+  location_id uuid [ref: > locations.id,note: 'Reference to the location table']
+  is_cash boolean
+  is_mobile_payment boolean
+  is_debit_card boolean
+  is_credit_card boolean
+  is_split_payment boolean
+  is_down_payment boolean
+  credit_limit_down_payment double
+  is_manual_discount boolean
+  is_price_override boolean
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean  [note: 'Indicates if the location asset is active']
+  created_at datetime  [note: 'Timestamp for when the location asset was created']
+  updated_at datetime  [note: 'Timestamp for when the location asset was last updated']
+  Note: 'Collection of location (Details) and it\'s relavant payment settings'
+}
+
+Table location_payment_override {
+  id uuid [primary key]
+  location_payment_setting_id uuid [ref: > location_payment_settings.id,note: 'Reference to location payment settings table']
+  role_id integer [ref: > user_roles.id, note: 'Reference to user roles table']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean  [note: 'Indicates if the location asset is active']
+  created_at datetime  [note: 'Timestamp for when the location asset was created']
+  updated_at datetime  [note: 'Timestamp for when the location asset was last updated']
+  Note: 'Collection of location Payment relavant override settings by user roles'
+}
+
+Table location_order_settings {
+  id uuid [primary key]
+  location_id uuid [ref: > locations.id, note: 'Reference to the location table']
+  is_customer_name_required boolean [note: 'Indicates if customer name is required for orders']
+  is_returnable boolean [note: 'Indicates if orders are returnable']
+  return_doc_asset_id uuid [ref: > assets.id, note: 'Reference to assets table']
+  return_window_in_days boolean [note: 'Indicates the return window in days']
+  is_only_exchangeable boolean [note: 'Indicates if the item is only exchangeable']
+  is_order_specialist_displayable boolean [note: 'Indicates if order specialist is displayable']
+  is_order_status_displayable boolean [note: 'Indicates if order status is displayable']
+  order_status_display_access_code text [note: 'Access code for order status display']
+  order_access_link text [note: 'Link for order access']
+  is_self_serviceable boolean [note: 'Indicates if the location is self-serviceable']
+  is_pre_orderable boolean [note: 'Indicates if pre-ordering is available']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean [note: 'Indicates if the location order settings are active']
+  created_at datetime [note: 'Timestamp for when the location order settings were created']
+  updated_at datetime [note: 'Timestamp for when the location order settings were last updated']
+  Note: 'Stores the collection of location order settings in the application'
+}
+
+Table location_self_service_assets {
+  id uuid [primary key]
+  location_id uuid [ref: > locations.id, note: 'Reference to the location table']
+  asset_id uuid [ref: > assets.id, note: 'Reference to assets table']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean [note: 'Indicates if the location self service asset are active']
+  created_at datetime [note: 'Timestamp for when the location self service asset were created']
+  updated_at datetime [note: 'Timestamp for when the location self service asset were last updated']
+  Note: 'Stores the collection of location self service banners/assets in the application'
+}
+
+Table location_invoice_settings {
+  id uuid [primary key]
+  location_id uuid [ref: > locations.id, note: 'Reference to the location table']
+  custom_message text [note: 'Custom message for the invoice']
+  is_cashier_displayed boolean [note: 'Indicates if cashier details are displayed on the invoice']
+  is_customer_name_displayed boolean [note: 'Indicates if customer name is displayed on the invoice']
+  is_rate_of_item_displayed boolean [note: 'Indicates if the rate of each item is displayed on the invoice']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean [note: 'Indicates if the location invoice settings are active']
+  created_at datetime [note: 'Timestamp for when the location invoice settings were created']
+  updated_at datetime [note: 'Timestamp for when the location invoice settings were last updated']
+  Note: 'Stores the collection of location invoice settings in the application'
+}
+
+Table location_tables {
+  id uuid [primary key]
+  location_id uuid [ref: > locations.id, note: 'Reference to the location table']
+  name text [note: 'Name of the location table']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean [note: 'Indicates if the location table is active']
+  created_at datetime [note: 'Timestamp for when the location table was created']
+  updated_at datetime [note: 'Timestamp for when the location table was last updated']
+  Note: 'Stores the collection of location tables in the application'
+}
+
+Table location_devices {
+  id uuid [primary key]
+  location_id uuid [ref: > locations.id, note: 'Reference to the location table']
+  organization_user_profile_id uuid [ref: > organization_user_profiles.id, note: 'Reference to the organization user profile']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_approved boolean [note: 'Indicates if the location device is approved']
+  is_active boolean [note: 'Indicates if the location device is active']
+  created_at datetime [note: 'Timestamp for when the location device was created']
+  updated_at datetime [note: 'Timestamp for when the location device was last updated']
+  Note: 'Stores the collection of location devices in the application'
+}
+
+Table tax_settings {
+  id uuid [primary key]
+  name text [note: 'Name of the tax setting']
+  value double [note: 'Value of the tax setting']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean [note: 'Indicates if the tax setting is active']
+  created_at datetime [note: 'Timestamp for when the tax setting was created']
+  updated_at datetime [note: 'Timestamp for when the tax setting was last updated']
+  Note: 'Stores the collection of tax settings in the application'
+}
+
+Table master_offer_applicabilities {
+  id integer [primary key]
+  name text [note: 'Indicates offer is on Order, Item, Buy X Get Y, etc.,']
+  is_active boolean [note: 'Indicates if the offer applicability is active']
+  created_at datetime [note: 'Timestamp for when the offer applicability was created']
+  updated_at datetime [note: 'Timestamp for when the offer applicability was last updated']
+  Note: 'Stores the collection of offer applicabilities in the application'
+}
+
+Table org_offers {
+  id uuid [primary key]
+  name text [note: 'Name of the offer']
+  description text [note: 'Description of the offer']
+  is_on_pos boolean [note: 'Indicates if the offer is applicable on Point of Sale (POS)']
+  is_on_selfservice boolean [note: 'Indicates if the offer is applicable on self-service']
+  offer_applicable_id integer [ref: > master_offer_applicabilities.id, note: 'Reference to the offer applicability in master_offer_applicabilities table']
+  offer_type text [note: 'Type of offer, percentage or flat']
+  offer_value double [note: 'Value of the offer']
+  offer_start_date date [note: 'Start date of the offer']
+  offer_end_date date [note: 'End date of the offer']
+  offer_start_time time [note: 'Start time of the offer']
+  offer_end_time time [note: 'End time of the offer']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean [note: 'Indicates if the offer is active']
+  created_at datetime [note: 'Timestamp for when the offer was created']
+  updated_at datetime [note: 'Timestamp for when the offer was last updated']
+  Note: 'Stores the collection of client-specific offers in the application'
+}
+
+Table org_customer_inquiry {
+  id uuid [primary key]
+  customer_id uuid [ref: > organization_user_profiles.id, note: 'Reference to the organization user profile']  
+  title text [note: 'Title of the customer inquiry']
+  description text [note: 'Description of the customer inquiry']
+  product_id uuid [ref: > items.id, note: 'Reference to the product associated with the inquiry']
+  tags text[] [note: 'Array of tags associated with the inquiry']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean [note: 'Indicates if the customer inquiry is active']
+  created_at datetime [note: 'Timestamp for when the customer inquiry was created']
+  updated_at datetime [note: 'Timestamp for when the customer inquiry was last updated']
+  Note: 'Stores the collection of client-specific customer inquiries in the application'
+}
+
+Table master_reseller_types {
+  id integer [primary key]
+  name text [note: 'Indicates reseller is direct, third party etc.,']
+  is_active boolean [note: 'Indicates if the offer applicability is active']
+  created_at datetime [note: 'Timestamp for when the offer applicability was created']
+  updated_at datetime [note: 'Timestamp for when the offer applicability was last updated']
+  Note: 'Stores the collection of offer applicabilities in the application'
+}
+
+Table client_resellers {
+  id uuid [primary key]
+  organization_user_profile_id uuid [ref: > organization_user_profiles.id, note: 'Reference to the organization user profile']  
+  type_id integer [ref: > master_reseller_types.id]
+  package_id text
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean [note: 'Indicates if the customer inquiry is active']
+  created_at datetime [note: 'Timestamp for when the customer inquiry was created']
+  updated_at datetime [note: 'Timestamp for when the customer inquiry was last updated']
+  Note: 'Stores the collection of client-specific customer inquiries in the application'
+}
+
+Table master_contract_types {
+  id integer [primary key]
+  name text [note: 'Indicates reseller is direct, third party etc.,']
+  is_active boolean [note: 'Indicates if the offer applicability is active']
+  created_at datetime [note: 'Timestamp for when the offer applicability was created']
+  updated_at datetime [note: 'Timestamp for when the offer applicability was last updated']
+  Note: 'Stores the collection of offer applicabilities in the application'
+}
+
+Table client_reseller_contracts {
+  id uuid [primary key]
+  reseller_id uuid [ref: > client_resellers.id, note: 'Reference to the client reseller']
+  contract_number text [note: 'Number associated with the reseller contract']
+  start_date date [note: 'Start date of the reseller contract']
+  end_date date [note: 'End date of the reseller contract']
+  contract_type_id integer [ref: > master_contract_types.id, note: 'Reference to the contract type in master_contract_types table']
+  price double [note: 'Price associated with the reseller contract']
+  lease_payment_due_in_months double [note: 'Lease payment due in months for the reseller contract']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean [note: 'Indicates if the reseller contract is active']
+  created_at datetime [note: 'Timestamp for when the reseller contract was created']
+  updated_at datetime [note: 'Timestamp for when the reseller contract was last updated']
+  Note: 'Stores the collection of client-specific reseller contracts in the application'
+}
+
+Table client_contract_licenses {
+  id uuid [primary key]
+  contract_id uuid [ref: > client_reseller_contracts.id, note: 'Reference to the client reseller contract']
+  is_used boolean [note: 'Indicates if the contract license is used']
+  is_payment_done boolean [note: 'Indicates if the payment for the contract license is done']
+  is_active boolean [note: 'Indicates if the contract license is active']
+  created_at datetime [note: 'Timestamp for when the contract license was created']
+  updated_at datetime [note: 'Timestamp for when the contract license was last updated']
+  Note: 'Stores the collection of client-specific contract licenses in the application'
+}
+
+Table master_payment_statuses {
+  id integer [primary key]
+  name text [note: 'Name of the payment status']
+  is_active boolean [note: 'Indicates if the payment status is active']
+  created_at datetime [note: 'Timestamp for when the payment status was created']
+  updated_at datetime [note: 'Timestamp for when the payment status was last updated']
+  Note: 'Stores the collection of client-specific payment statuses in the application'
+}
+
+Table client_reseller_payments {
+  id uuid [primary key]
+  contract_id uuid [ref: > client_reseller_contracts.id, note: 'Reference to the client reseller contract']
+  status_id integer [ref: > master_payment_statuses.id, note: 'Reference to the payment status in master_payment_statuses table']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean [note: 'Indicates if the reseller payment is active']
+  created_at datetime [note: 'Timestamp for when the reseller payment was created']
+  updated_at datetime [note: 'Timestamp for when the reseller payment was last updated']
+  Note: 'Stores the collection of client-specific reseller payments in the application'
+}
+
+Table master_order_statuses {
+  id integer [primary key]
+  name text [note: 'Name of the order status']
+  is_active boolean [note: 'Indicates if the order status is active']
+  created_at datetime [note: 'Timestamp for when the order status was created']
+  updated_at datetime [note: 'Timestamp for when the order status was last updated']
+  Note: 'Stores the collection of client-specific order statuses in the application'
+}
+
+Table master_order_payment_modes {
+  id integer [primary key]
+  name text [note: 'Name of the order payment mode']
+  is_active boolean [note: 'Indicates if the order payment mode is active']
+  created_at datetime [note: 'Timestamp for when the order payment mode was created']
+  updated_at datetime [note: 'Timestamp for when the order payment mode was last updated']
+  Note: 'Stores the collection of client-specific order payment modes in the application'
+}
+
+Table master_order_payment_statuses {
+  id integer [primary key]
+  name text [note: 'Name of the order payment status']
+  is_active boolean [note: 'Indicates if the order payment status is active']
+  created_at datetime [note: 'Timestamp for when the order payment status was created']
+  updated_at datetime [note: 'Timestamp for when the order payment status was last updated']
+  Note: 'Stores the collection of client-specific order payment statuses in the application'
+}
+
+Table master_order_return_exchange_reasons {
+  id uuid [primary key]
+  reason text [note: 'Textual representation of the return/exchange reason']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean [note: 'Indicates if the return/exchange reason is active']
+  created_at datetime [note: 'Timestamp for when the return/exchange reason was created']
+  updated_at datetime [note: 'Timestamp for when the return/exchange reason was last updated']
+  Note: 'Stores the collection of client-specific return/exchange reasons in the application'
+}
+
+Enum order_types {
+  b2c_sales  
+  b2b_sales
+  b2b_purchase
+}
+
+Table org_carts {
+  id uuid [primary key]
+  unique_no text [unique]
+  order_type order_types
+  vendor_id uuid [ref: > business_entities.id, note: 'Reference to the vendor in business_entities table']
+  b2b_customer_id uuid [ref: > business_entities.id, note: 'Reference to the B2B customer in business_entities table']
+  customer_id uuid [ref: > organization_user_profiles.id, note: 'Reference to the organization user profile']  
+  location_id uuid [ref: > locations.id, note: 'Reference to the location in locations table']
+  attender_id uuid [ref: > organization_user_profiles.id, note: 'Reference to the attender in organization_user_profiles table']
+  table_id uuid [ref: > location_tables.id, note: 'Reference to the table in location_tables table']
+  offer_id uuid [ref: > org_offers.id, note: 'Reference to the offer in org_offers table']
+  gross_value double [note: 'Gross value of the cart']
+  tax_value double [note: 'Tax value of the cart']
+  offer_value double [note: 'Offer value of the cart']
+  net_value double [note: 'Net value of the cart']  
+  notes text [note: 'Additional notes for the cart']
+  is_manual_discount boolean [note: 'Indicates if the cart has a manual discount']
+  manual_discount double [note: 'Manual discount amount if applicable']
+  manual_discount_type text [note: 'Type of manual discount, percentage, or flat']
+  manual_discount_notes text [note: 'Notes for manual discount']  
+  status_id integer [ref: > master_order_statuses.id, note: 'Reference to the cart status in master_order_statuses table']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  meta_data json [note: 'Meta Data for processing']
+  is_active boolean [note: 'Indicates if the cart is active']
+  created_at datetime [note: 'Timestamp for when the cart was created']
+  updated_at datetime [note: 'Timestamp for when the cart was last updated']
+  Note: 'Stores the collection of client-specific carts in the application'
+}
+
+Table org_cart_items {
+  id uuid [primary key]
+  cart_id uuid [ref: > org_carts.id, note: 'Reference to the cart in org_carts table']
+  item_id uuid [ref: > items.id, note: 'Reference to the item in items table']
+  item_variant_id uuid [ref: > item_variants.id, note: 'Reference to the item variant in item_variants table']
+  quantity double [note: 'Quantity of the item in the cart']
+  offer_id uuid [ref: > org_offers.id, note: 'Reference to the offer in org_offers table']
+  gross_value double [note: 'Gross value of the cart item']
+  tax_value double [note: 'Tax value of the cart item']
+  offer_value double [note: 'Offer value of the cart item']
+  net_value double [note: 'Net value of the cart item']  
+  is_returned boolean [note: 'Indicates if the item in the cart has been returned']
+  is_exchanged boolean [note: 'Indicates if the item in the cart has been exchanged']
+  return_exchange_reason_id uuid [ref: > master_order_return_exchange_reasons.id, note: 'Reference to the reason for return/exchange']
+  return_exchange_notes text [note: 'Additional notes related to return/exchange of the item']
+  was_returned_item_checked boolean [note: 'Indicates if the returned item has been checked/verified']
+  exchanged_with_item_id uuid [ref: > org_cart_items.id, note: 'Reference to the item that the current item was exchanged with']
+  is_active boolean [note: 'Indicates if the cart item is active']
+  created_at datetime [note: 'Timestamp for when the cart item was created']
+  updated_at datetime [note: 'Timestamp for when the cart item was last updated']
+  Note: 'Stores the collection of client-specific cart items in the application'
+}
+
+Table org_cart_histories {
+  id uuid [primary key]
+  cart_id uuid [ref: > org_carts.id, note: 'Reference to the cart in org_carts table']
+  meta_data json [note: 'Meta Data for processing']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client for the cart history']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']  
+  is_active boolean [note: 'Indicates if the cart history is active']
+  created_at datetime [note: 'Timestamp for when the cart history was created']
+  updated_at datetime [note: 'Timestamp for when the cart history was last updated']
+  Note: 'Stores the collection of client-specific cart histories in the application'
+}
+
+
+Table org_orders {
+  id uuid [primary key]
+  invoice_no text [unique]
+  invoice_date date [note: 'if sales then created_at and this date should be same']
+  type order_types
+  vendor_id uuid [ref: > business_entities.id]
+  b2b_customer_id uuid [ref: > business_entities.id]
+  customer_id uuid [ref: > organization_user_profiles.id, note: 'Reference to the customer in organization_user_profiles table']
+  location_id uuid [ref: > locations.id, note: 'Reference to the location in locations table']
+  attender_id uuid [ref: > organization_user_profiles.id, note: 'Reference to the attender in organization_user_profiles table']
+  table_id uuid [ref: > location_tables.id, note: 'Reference to the table in location_tables table']
+  offer_id uuid [ref: > org_offers.id, note: 'Reference to the offer in org_offers table']
+  gross_value double [note: 'Gross value of the order']
+  tax_value double [note: 'Tax value of the order']
+  offer_value double [note: 'Offer value of the order']
+  net_value double [note: 'Net value of the order']  
+  notes text [note: 'Additional notes for the order']
+  is_manual_discount boolean [note: 'Indicates if the order has a manual discount']
+  manual_discount double [note: 'Manual discount amount if applicable']
+  manual_discount_type text [note: 'Type of manual discount, percentage or flat']
+  manual_discount_notes text [note: 'Notes for manual discount']  
+  status_id  integer [ref: > master_order_statuses.id, note: 'Reference to the order status in master_order_statuses table']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  meta_data json [note: 'Meta Data for processing']
+  is_active boolean [note: 'Indicates if the order is active']
+  created_at datetime [note: 'Timestamp for when the order was created']
+  updated_at datetime [note: 'Timestamp for when the order was last updated']
+  Note: 'Stores the collection of client-specific orders in the application'
+}
+
+Table org_order_assets {
+  id uuid [primary key]
+  order_id uuid [ref: > org_orders.id, note: 'ID of the associated order']
+  asset_id uuid [ref: > assets.id, note: 'ID of the associated asset']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'ID of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'ID of the updater profile']  
+  is_active boolean [note: 'Indicates if the order asset is currently active']
+  created_at datetime [note: 'Timestamp for when the order asset was created']
+  updated_at datetime [note: 'Timestamp for when the order asset was last updated']
+  Note: 'Stores the collection of client-specific order assets in the application'
+}
+
+Table org_order_items {
+  id uuid [primary key]
+  order_id uuid [ref: > org_orders.id, note: 'Reference to the org_orders in client_orders table']
+  order_item_id uuid [ref: > stock_adjusted_items.id, note: 'Reference to the stock adjustment items in stock_adjusted_items table']   
+  offer_id uuid [ref: > org_offers.id, note: 'Reference to the offer in org_offers table']
+  gross_value double [note: 'Gross value of the order item']
+  tax_value double [note: 'Tax value of the order item']
+  offer_value double [note: 'Offer value of the order item']
+  net_value double [note: 'Net value of the order item']  
+  is_returned boolean [note: 'Indicates if the item in the order has been returned']
+  is_exchanged boolean [note: 'Indicates if the item in the order has been exchanged']
+  return_exchange_reason_id uuid [ref: > master_order_return_exchange_reasons.id, note: 'Reference to the reason for return/exchange']
+  return_exchange_notes text [note: 'Additional notes related to return/exchange of the item']
+  was_returned_item_checked boolean [note: 'Indicates if the returned item has been checked/verified']
+  exchanged_with_item_id uuid [ref: > org_order_items.id, note: 'Reference to the item that the current item was exchanged with']
+  is_active boolean [note: 'Indicates if the order item is active']
+  created_at datetime [note: 'Timestamp for when the order item was created']
+  updated_at datetime [note: 'Timestamp for when the order item was last updated']
+  Note: 'Stores the collection of client-specific order items in the application'
+}
+
+
+Table org_order_payments {
+  id uuid [primary key]
+  order_id uuid [ref: > org_orders.id, note: 'Reference to the order in client_orders table']
+  payment_mode_id integer [ref: > master_order_payment_modes.id, note: 'Reference to the payment mode in master_order_payment_modes table']
+  payment_status_id integer [ref: > master_order_payment_statuses.id, note: 'Reference to the payment status in master_order_payment_statuses table']
+  meta json [note: 'Payment meta data']  
+  is_active boolean [note: 'Indicates if the order payment is active']
+  created_at datetime [note: 'Timestamp for when the order payment was created']
+  updated_at datetime [note: 'Timestamp for when the order payment was last updated']
+  Note: 'Stores the collection of client-specific order payments in the application'
+}
+
+Table org_order_refunds {
+  id uuid [primary key]
+  order_id uuid [ref: > org_orders.id, note: 'Reference to the order in org_orders table']
+  refund_mode_id integer [ref: > master_order_payment_modes.id, note: 'Reference to the payment mode in master_order_payment_modes table']
+  refund_status_id integer [ref: > master_order_payment_statuses.id, note: 'Reference to the payment status in master_order_payment_statuses table']
+  meta json [note: 'Payment meta data']  
+  is_active boolean [note: 'Indicates if the order refund is active']
+  created_at datetime [note: 'Timestamp for when the order refund was created']
+  updated_at datetime [note: 'Timestamp for when the order refund was last updated']
+  Note: 'Stores the collection of client-specific order refunds in the application'
+}
+
+Table org_order_histories {
+  id uuid [primary key]
+  order_id uuid [ref: > org_orders.id, note: 'Reference to the order in org_orders table']
+  meta_data json [note: 'Meta Data for processing']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']  
+  is_active boolean [note: 'Indicates if the order history is active']
+  created_at datetime [note: 'Timestamp for when the order history was created']
+  updated_at datetime [note: 'Timestamp for when the order history was last updated']
+  Note: 'Stores the collection of client-specific order histories in the application'
+}
+
+Table stock_adjusted_items {
+  id uuid [primary key]
+  item_id uuid [ref: > items.id, note: 'Reference to the item in the items table']
+  item_variant_id uuid [ref: > item_variants.id, note: 'Reference to the item variant in the item_variants table'] 
+  quantity double [note: 'Quantity of the stock adjustment']
+  uom_id uuid [ref: > uoms.id, note: 'Reference to the unit of measure in the uoms table']  
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean [note: 'Indicates if the stock adjustment is active']
+  created_at datetime [note: 'Timestamp for when the stock adjustment was created']
+  updated_at datetime [note: 'Timestamp for when the stock adjustment was last updated']
+  Note: 'Stores the collection of stock items associated with stock orders/transfers/adjustments between/in locations in the application'
+}
+
+Table stock_adjusted_items_details {
+  id uuid [primary key]
+  adjustment_items_id uuid [ref: > stock_adjusted_items.id, note: 'Reference to the stock transfer item in the stock_adjusted_items table']
+  batch_no text [note: 'Batch number of the stock transfer item']
+  serial_no text [note: 'Serial number of the stock transfer item']
+  quantity double [note: 'Quantity of the stock transfer item']
+  expiry_date date [note: 'Expiry date of the stock transfer item']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean [note: 'Indicates if the stock adjustment is active']
+  created_at datetime [note: 'Timestamp for when the stock transfer was created']
+  updated_at datetime [note: 'Timestamp for when the stock transfer was last updated']
+  Note: 'Stores the collection of stock item details associated with stock orders/transfers/adjustments between/in locations in the application'
+}
+
+Table org_location_running_stock {
+  id uuid [primary key]
+  location_id uuid [ref: > locations.id, note: 'Reference to the location in the locations table']
+  item_id uuid [ref: > items.id, note: 'Reference to the item in the items table']
+  item_variant_id uuid [ref: > item_variants.id, note: 'Reference to the item variant in the item_variants table']  
+  quantity double [note: 'Quantity of the stock']
+  uom_id uuid [ref: > uoms.id, note: 'Reference to the unit of measure in the uoms table']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean [note: 'Indicates if the stock transfer is active']
+  created_at datetime [note: 'Timestamp for when the stock transfer was created']
+  updated_at datetime [note: 'Timestamp for when the stock transfer was last updated']
+  Note: 'Stores the collection of running stock records associated with client locations in the application'
+}
+
+Table org_running_stock_item_details {
+  id uuid [primary key]
+  running_stock_id uuid [ref: > org_location_running_stock.id, note: 'Reference to the running stock in the org_location_running_stock table']
+  batch_no text [note: 'Batch number of the stock']
+  serial_no text [note: 'Serial number of the stock']
+  quantity double [note: 'Quantity of the stock']
+  expiry_date date [note: 'Expiry date of the stock']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean [note: 'Indicates if the stock transfer is active']
+  created_at datetime [note: 'Timestamp for when the stock transfer was created']
+  updated_at datetime [note: 'Timestamp for when the stock transfer was last updated']
+  Note: 'Stores the collection of stock item details associated with client locations in the application'
+}
+
+Enum stock_type {
+  in [note: 'Stock received']
+  out [note: 'Stock issued']
+  adjusted_in [note: 'Stock adjustment - increase']
+  adjusted_out [note: 'Stock adjustment - decrease']
+  transfer [note: 'Stock transfer between locations']  
+}
+
+Enum stock_adjustment_type {
+  increase [note: 'Stock adjustment - increase']
+  decrease [note: 'Stock adjustment - decrease']
+}
+
+Table org_stock_adjustments {
+  id uuid [primary key]
+  location_id uuid [ref: > locations.id, note: 'Reference to the location in the locations table']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  remarks text [note: 'Additional notes or comments related to the stock adjustment']
+  is_active boolean [note: 'Indicates if the stock adjustment is active']
+  created_at datetime [note: 'Timestamp indicating when the stock adjustment was created']
+  updated_at datetime [note: 'Timestamp indicating when the stock adjustment was last updated']
+  Note: 'Stores the collection of stock adjustments at locations in the application'
+}
+
+Table org_stock_adjustment_entries {
+  id uuid [primary key]
+  adjustment_id uuid [ref: > org_stock_adjustments.id, note: 'Reference to the corresponding stock adjustment in the org_stock_adjustments table']
+  adjusted_item_id uuid [ref: > stock_adjusted_items.id, note: 'Reference to the stock adjustment item in the stock_adjusted_items table']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean [note: 'Indicates if the stock movement is active']
+  created_at datetime [note: 'Timestamp indicating when the stock movement was created']
+  updated_at datetime [note: 'Timestamp indicating when the stock movement was last updated']
+  Note: 'Stores the collection of stock item adjustments associated with stock adjustments in the application'
+}
+
+Table org_stock_transfers {
+  id uuid [primary key]
+  source_location_id uuid [ref: > locations.id, note: 'Reference to the source location in the locations table']
+  destination_location_id uuid [ref: > locations.id, note: 'Reference to the destination location in the locations table']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  remarks text [note: 'Additional notes or comments related to the stock transfer']
+  is_active boolean [note: 'Indicates if the stock transfer is active']
+  created_at datetime [note: 'Timestamp indicating when the stock transfer was created']
+  updated_at datetime [note: 'Timestamp indicating when the stock transfer was last updated']
+  Note: 'Stores the collection of stock transfers between locations in the application'
+}
+
+Table org_stock_transfer_entries {
+  id uuid [primary key]
+  transfer_id uuid [ref: > org_stock_transfers.id, note: 'Reference to the corresponding stock transfer in the org_stock_transfers table']
+  transferred_item_id uuid [ref: > stock_adjusted_items.id, note: 'Reference to the stock transfer item in the stock_adjusted_items table']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean [note: 'Indicates if the stock movement is active']
+  created_at datetime [note: 'Timestamp indicating when the stock movement was created']
+  updated_at datetime [note: 'Timestamp indicating when the stock movement was last updated']
+  Note: 'Stores the collection of stock item transfers associated with stock transfers in the application'
+}
+
+Table org_stock_histories {
+  id uuid [primary key]
+  type stock_type [note: 'Type of stock movement']
+  order_id uuid [ref: > org_orders.id, note: 'Reference to the order in the org_orders table']
+  adjustment_id uuid [ref: > org_stock_adjustments.id, note: 'Reference to the stock adjustment in the org_stock_adjustments table']
+  transfer_id uuid [ref: > org_stock_transfers.id, note: 'Reference to the stock transfer in the org_stock_transfers table']  
+  quantity double [note: 'Quantity of the stock']
+  uom_id uuid [ref: > uoms.id, note: 'Reference to the unit of measure in the uoms table']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_active boolean [note: 'Indicates if the stock movement is active']
+  created_at datetime [note: 'Timestamp for when the stock movement was created']
+  updated_at datetime [note: 'Timestamp for when the stock movement was last updated']
+  Note: 'Stores the collection of historical records of stock movements in the application'
+}
+
+Table location_stock_alert {
+  id uuid [primary key]
+  location_id uuid [ref: > locations.id, note: 'Reference to the location in the locations table']
+  item_id uuid [ref: > items.id, note: 'Reference to the item associated with the stock alert']
+  minimum_stock double [note: 'Minimum stock level triggering the alert']
+  uom_id uuid [ref: > uoms.id, note: 'Reference to the unit of measure (UOM) for the stock alert']
+  organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
+  client_id varchar [note: 'ID of the associated client']
+  created_by uuid [ref: > organization_user_profiles.id, note: 'Id of the creator profile']
+  updated_by uuid [ref: > organization_user_profiles.id, note: 'Id of the updater profile']
+  is_approved boolean [note: 'Indicates if the stock alert is approved']
+  is_active boolean [note: 'Indicates if the stock alert is active']
+  created_at datetime [note: 'Timestamp for when the stock alert was created']
+  updated_at datetime [note: 'Timestamp for when the stock alert was last updated']
+  Note: 'Stores the collection of location stock alerts for low stock levels in the application'
+}
