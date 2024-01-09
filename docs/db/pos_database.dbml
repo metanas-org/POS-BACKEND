@@ -928,7 +928,7 @@ Table master_order_payment_statuses {
   Note: 'Stores the collection of client-specific order payment statuses in the application'
 }
 
-Table master_order_return_exchange_reasons {
+Table org_order_return_exchange_reasons {
   id uuid [primary key]
   reason text [note: 'Textual representation of the return/exchange reason']
   organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
@@ -992,7 +992,7 @@ Table org_cart_items {
   net_value double [note: 'Net value of the cart item']  
   is_returned boolean [note: 'Indicates if the item in the cart has been returned']
   is_exchanged boolean [note: 'Indicates if the item in the cart has been exchanged']
-  return_exchange_reason_id uuid [ref: > master_order_return_exchange_reasons.id, note: 'Reference to the reason for return/exchange']
+  return_exchange_reason_id uuid [ref: > org_order_return_exchange_reasons.id, note: 'Reference to the reason for return/exchange']
   return_exchange_notes text [note: 'Additional notes related to return/exchange of the item']
   was_returned_item_checked boolean [note: 'Indicates if the returned item has been checked/verified']
   exchanged_with_item_id uuid [ref: > org_cart_items.id, note: 'Reference to the item that the current item was exchanged with']
@@ -1075,7 +1075,7 @@ Table org_order_items {
   net_value double [note: 'Net value of the order item']  
   is_returned boolean [note: 'Indicates if the item in the order has been returned']
   is_exchanged boolean [note: 'Indicates if the item in the order has been exchanged']
-  return_exchange_reason_id uuid [ref: > master_order_return_exchange_reasons.id, note: 'Reference to the reason for return/exchange']
+  return_exchange_reason_id uuid [ref: > org_order_return_exchange_reasons.id, note: 'Reference to the reason for return/exchange']
   return_exchange_notes text [note: 'Additional notes related to return/exchange of the item']
   was_returned_item_checked boolean [note: 'Indicates if the returned item has been checked/verified']
   exchanged_with_item_id uuid [ref: > org_order_items.id, note: 'Reference to the item that the current item was exchanged with']
@@ -1218,9 +1218,15 @@ Table org_stock_adjustments {
   Note: 'Stores the collection of stock adjustments at locations in the application'
 }
 
+Enum adjustement_type {
+  increase
+  decrease
+}
+
 Table org_stock_adjustment_entries {
   id uuid [primary key]
   adjustment_id uuid [ref: > org_stock_adjustments.id, note: 'Reference to the corresponding stock adjustment in the org_stock_adjustments table']
+  type adjustement_type [note: 'Mentions the type of adjustment']
   adjusted_item_id uuid [ref: > stock_adjusted_items.id, note: 'Reference to the stock adjustment item in the stock_adjusted_items table']
   organization_id uuid [ref: > organizations.id, note: 'ID of the associated organization']
   client_id varchar [note: 'ID of the associated client']
