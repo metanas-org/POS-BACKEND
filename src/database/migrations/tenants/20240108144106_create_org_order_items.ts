@@ -24,7 +24,7 @@ export const up = async (knex: Knex): Promise<void> => {
     table
       .uuid("return_exchange_reason_id")
       .references("id")
-      .inTable("master_order_return_exchange_reasons")
+      .inTable("order_return_exchange_reasons")
       .onDelete("CASCADE");
 
     table.text("return_exchange_notes");

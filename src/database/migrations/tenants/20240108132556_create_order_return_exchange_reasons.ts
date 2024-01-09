@@ -1,18 +1,9 @@
 import { Knex } from "knex";
 
 export const up = async (knex: Knex): Promise<void> => {
-  await knex.schema.createTable("stock_adjusted_items", (table) => {
+  await knex.schema.createTable("order_return_exchange_reasons", (table) => {
     table.uuid("id").defaultTo(knex.fn.uuid()).primary();
-
-    table.string("type");
-    table.uuid("item_id").references("id").inTable("items").onDelete("CASCADE");
-    table
-      .uuid("item_variant_id")
-      .references("id")
-      .inTable("item_variants")
-      .onDelete("CASCADE");
-    table.double("quantity");
-    table.uuid("uom_id").references("id").inTable("uoms").onDelete("CASCADE");
+    table.string("reason").notNullable();
 
     table
       .uuid("organization_id")
@@ -38,5 +29,5 @@ export const up = async (knex: Knex): Promise<void> => {
 };
 
 export const down = async (knex: Knex): Promise<void> => {
-  await knex.schema.dropTableIfExists("stock_adjusted_items");
+  await knex.schema.dropTableIfExists("order_return_exchange_reasons");
 };
